@@ -1,0 +1,19 @@
+<div class="field">
+  <label>{{ label }}</label>
+
+  <p-iconfield>
+    <p-inputicon [class]="icon"></p-inputicon>
+
+    <input
+      pInputText
+      [type]="type"
+      [placeholder]="placeholder"
+      [formControl]="control" />
+  </p-iconfield>
+
+@if (control.invalid && control.touched) {
+  <small class="error">
+    Invalid {{ label }}
+  </small>
+}
+</div>

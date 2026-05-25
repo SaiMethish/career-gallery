@@ -1,0 +1,47 @@
+.job-card {
+  border-radius: 24px;
+  border: none;
+}
+
+.job-header {
+  display: flex;
+  gap: 1rem;
+}
+
+.job-info {
+  flex: 1;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.company {
+  color: var(--text-color-secondary);
+}
+
+.salary {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.skills {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
