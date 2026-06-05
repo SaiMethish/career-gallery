@@ -1,34 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --primary-color: #4F46E5;
-  --primary-color-text: #ffffff;
+  --primary-color: var(--p-primary-color);
+  --primary-color-text: var(--p-primary-contrast-color);
 
-  --surface-ground: #F9FAFB;
-  --surface-card: #ffffff;
+  --surface-ground: var(--p-surface-50);
+  --surface-card: var(--p-surface-0);
 
-  --text-color: #111827;
-  --text-color-secondary: #6B7280;
+  --text-color: var(--p-surface-900);
+  --text-color-secondary: var(--p-surface-500);
 
-  --border-color: #E5E7EB;
+  --border-color: var(--p-content-border-color);
 
-  --secondary-color: #06B6D4;
-  --accent-color: #A54100;
+  --secondary-color: var(--p-brand-secondary-500);
+  --accent-color: var(--p-brand-accent-500);
 
-  --border-radius: 16px;
+  --border-radius: var(--p-border-radius-lg);
 }
 
 @import "primeicons/primeicons.css";
 
 /* Global defaults for the app */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
+}
+
+body,
+.p-component {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
   background-color: var(--surface-ground);
   color: var(--text-color);
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100%;
@@ -38,11 +43,4 @@ body {
 /* Optional utility: use for containers that should use card background */
 .surface-card {
   background-color: var(--surface-card);
-}
-
-body {
-  margin: 0;
-  background: var(--surface-ground);
-  font-family: Inter, sans-serif;
-  color: var(--text-color);
 }

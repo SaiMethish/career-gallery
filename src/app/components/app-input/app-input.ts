@@ -2,10 +2,11 @@ import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { IconFieldModule } from "primeng/iconfield";
 import { InputIconModule } from "primeng/inputicon";
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-input',
-  imports: [IconFieldModule, InputIconModule,ReactiveFormsModule],
+  imports: [IconFieldModule, InputIconModule, InputTextModule, ReactiveFormsModule],
   templateUrl: './app-input.html',
   styleUrl: './app-input.scss',
 })

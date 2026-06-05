@@ -1,19 +1,26 @@
 <div class="field">
   <label>{{ label }}</label>
 
-  <p-iconfield>
-    <p-inputicon [class]="icon"></p-inputicon>
-
+  @if (icon) {
+    <p-iconfield iconPosition="left">
+      <p-inputicon [class]="icon"></p-inputicon>
+      <input
+        pInputText
+        [type]="type"
+        [placeholder]="placeholder"
+        [formControl]="control" />
+    </p-iconfield>
+  } @else {
     <input
       pInputText
       [type]="type"
       [placeholder]="placeholder"
       [formControl]="control" />
-  </p-iconfield>
+  }
 
-@if (control.invalid && control.touched) {
-  <small class="error">
-    Invalid {{ label }}
-  </small>
-}
+  @if (control.invalid && control.touched) {
+    <small class="error">
+      Invalid {{ label }}
+    </small>
+  }
 </div>
