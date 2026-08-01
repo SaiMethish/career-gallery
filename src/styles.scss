@@ -1,5 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
+  /* Static defaults for PrimeNG variables to prevent FOUC / layout flash on page load */
+  --p-primary-color: #4F46E5;
+  --p-primary-contrast-color: #ffffff;
+
+  --p-surface-50: #F9FAFB;
+  --p-surface-0: #ffffff;
+  --p-surface-900: #111827;
+  --p-surface-500: #6B7280;
+
+  --p-content-border-color: #E5E7EB;
+
+  --p-brand-secondary-500: #06B6D4;
+  --p-brand-accent-500: #A54100;
+
+  --p-border-radius-lg: 16px;
+
+  /* Global variable aliases mapping */
   --primary-color: var(--p-primary-color);
   --primary-color-text: var(--p-primary-contrast-color);
 
@@ -20,6 +37,21 @@
 @import "primeicons/primeicons.css";
 
 /* Global defaults for the app */
+html {
+  font-size: 100%; /* Keep rem base at 16px — scaling handled via zoom on body */
+}
+
+/* Global heading and paragraph margin resets to prevent browser spacing blowups */
+h1, h2, h3, h4, h5, h6, p {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+}
+
+/* Global PrimeNG Card body padding reduction */
+.p-card-body {
+  padding: 1rem !important;
+}
+
 html,
 body {
   height: 100%;
@@ -32,15 +64,29 @@ body,
 }
 
 body {
-  background-color: var(--surface-ground);
+  background-color: var(--p-surface-0);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100%;
   line-height: 1.5;
+  /*
+   * 90% zoom: uniformly scales ALL CSS properties — font-size, width, height,
+   * padding, margin, border-radius — including px-based values from PrimeNG.
+   * Pattern: 1000px original → 900px scaled (1000 × 0.9 = 900).
+   */
+  zoom: 0.9;
 }
 
 /* Optional utility: use for containers that should use card background */
 .surface-card {
   background-color: var(--surface-card);
+}
+
+/* Ensure app root fills full width with no gaps */
+app-root, app-layout {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--p-surface-0);
 }
