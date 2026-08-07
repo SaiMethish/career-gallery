@@ -1,0 +1,72 @@
+<div class="register-page">
+      <h2 class="auth-heading">Create account</h2>
+      <p class="auth-subheading">Join Carbon Talent to discover your next opportunity</p>
+
+      @if (error$ | async; as error) {
+        <div class="auth-error" role="alert">
+          <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+          {{ error.message }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+        <div class="form-field">
+          <label for="reg-email" class="form-label">Email address</label>
+          <input id="reg-email" type="email" pInputText formControlName="email"
+                 class="form-input" placeholder="you@example.com" autocomplete="email"
+                 [class.form-input--error]="isFieldInvalid('email')" aria-required="true"/>
+          @if (isFieldInvalid('email')) {
+            <span class="form-error" role="alert">Please enter a valid email address.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="reg-password" class="form-label">Password</label>
+          <p-password id="reg-password" formControlName="password"
+                      [feedback]="true" [toggleMask]="true"
+                      styleClass="form-password" inputStyleClass="form-input"
+                      placeholder="Min. 8 characters" autocomplete="new-password"
+                      aria-required="true"/>
+          @if (isFieldInvalid('password')) {
+            <span class="form-error" role="alert">Password must be at least 8 characters.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label id="role-label" class="form-label">I am a</label>
+          <div class="role-selector" role="radiogroup" aria-labelledby="role-label">
+            @for (option of roleOptions; track option.value) {
+              <button type="button"
+                      class="role-option"
+                      [class.role-option--selected]="form.get('role')?.value === option.value"
+                      (click)="selectRole(option.value)"
+                      [id]="'role-option-' + option.value.toLowerCase()"
+                      [attr.aria-pressed]="form.get('role')?.value === option.value">
+                <i [class]="'pi ' + option.icon" aria-hidden="true"></i>
+                <span class="role-option__label">{{ option.label }}</span>
+                <span class="role-option__desc">{{ option.desc }}</span>
+              </button>
+            }
+          </div>
+          @if (isFieldInvalid('role')) {
+            <span class="form-error" role="alert">Please select your role.</span>
+          }
+        </div>
+
+        <button type="submit" id="btn-register-submit" class="auth-submit-btn"
+                [disabled]="form.invalid || (isLoading$ | async)"
+                aria-label="Create your account">
+          @if (isLoading$ | async) {
+            <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
+            Creating account...
+          } @else {
+            Create account
+          }
+        </button>
+      </form>
+
+      <p class="auth-footer-text">
+        Already have an account?
+        <a routerLink="/auth/login" id="link-to-login">Sign in</a>
+      </p>
+    </div>
