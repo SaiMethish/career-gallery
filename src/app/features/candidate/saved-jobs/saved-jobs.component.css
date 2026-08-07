@@ -1,0 +1,8 @@
+.saved-jobs { padding: var(--space-8) var(--space-10); max-width: var(--container-max); }
+    .saved-jobs__header { margin-bottom: var(--space-6); }
+    .saved-jobs__title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); }
+    .saved-jobs__sub { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-1); }
+    .jobs-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    .skeleton-card { height: 130px; background: var(--color-surface); animation: pulse 1.5s ease infinite; }
+    .skeleton-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }

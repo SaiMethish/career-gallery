@@ -1,0 +1,113 @@
+<div class="job-detail fade-in">
+      @if (isLoading()) {
+        <div class="detail-skeleton">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-body"></div>
+        </div>
+      } @else if (!job()) {
+        <app-empty-state icon="pi-exclamation-triangle" title="Job not found"
+          message="This job may have been removed or expired.">
+          <a routerLink="/candidate/jobs" class="back-link">Browse all jobs</a>
+        </app-empty-state>
+      } @else {
+        <div class="detail-header">
+          <a routerLink="/candidate/jobs" class="detail-back"
+             id="btn-back-to-jobs" aria-label="Back to job listings">
+            <i class="pi pi-arrow-left" aria-hidden="true"></i> Back to jobs
+          </a>
+          <div class="detail-hero">
+            <div class="detail-company-logo" aria-hidden="true">
+              {{ job()!.companyName?.charAt(0)?.toUpperCase() }}
+            </div>
+            <div class="detail-hero__info">
+              <h1 class="detail-title">{{ job()!.title }}</h1>
+              <p class="detail-company">{{ job()!.companyName }}</p>
+            </div>
+            <div class="detail-hero__actions">
+              <button class="detail-save-btn"
+                      (click)="toggleSave()" [id]="'btn-save-job-' + job()!.id"
+                      [attr.aria-label]="saved() ? 'Unsave this job' : 'Save this job'">
+                <i [class]="'pi ' + (saved() ? 'pi-bookmark-fill' : 'pi-bookmark')" aria-hidden="true"></i>
+                {{ saved() ? 'Saved' : 'Save' }}
+              </button>
+              @if (job()!.status === JobStatus.OPEN) {
+                <button class="detail-apply-btn" (click)="apply()"
+                        [id]="'btn-apply-job-' + job()!.id"
+                        [disabled]="applying()"
+                        aria-label="Apply to this job">
+                  @if (applying()) {
+                    <i class="pi pi-spinner pi-spin" aria-hidden="true"></i> Applying...
+                  } @else {
+                    Apply Now
+                  }
+                </button>
+              } @else {
+                <span class="detail-closed-badge">Applications Closed</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-layout">
+          <!-- Main content -->
+          <div class="detail-main">
+            <section class="detail-section" aria-labelledby="desc-heading">
+              <h2 id="desc-heading" class="detail-section__title">About the role</h2>
+              <p class="detail-description">{{ job()!.description }}</p>
+            </section>
+
+            @if (job()!.skills) {
+              <section class="detail-section" aria-labelledby="skills-heading">
+                <h2 id="skills-heading" class="detail-section__title">Required Skills</h2>
+                <div class="skill-tags">
+                  @for (skill of job()!.skills!.split(','); track skill) {
+                    <span class="skill-tag">{{ skill.trim() }}</span>
+                  }
+                </div>
+              </section>
+            }
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="detail-sidebar">
+            <div class="detail-meta-card">
+              <h3 class="detail-meta-card__title">Job Details</h3>
+              <dl class="detail-meta-list">
+                <div class="meta-item">
+                  <dt class="meta-item__label"><i class="pi pi-briefcase" aria-hidden="true"></i> Job Type</dt>
+                  <dd class="meta-item__value">{{ formatJobType(job()!.jobType) }}</dd>
+                </div>
+                <div class="meta-item">
+                  <dt class="meta-item__label"><i class="pi pi-map-marker" aria-hidden="true"></i> Location</dt>
+                  <dd class="meta-item__value">{{ job()!.location || 'Not specified' }}</dd>
+                </div>
+                <div class="meta-item">
+                  <dt class="meta-item__label"><i class="pi pi-clock" aria-hidden="true"></i> Experience</dt>
+                  <dd class="meta-item__value">{{ job()!.experienceMin }}–{{ job()!.experienceMax }} years</dd>
+                </div>
+                @if (job()!.salaryMin) {
+                  <div class="meta-item">
+                    <dt class="meta-item__label"><i class="pi pi-dollar" aria-hidden="true"></i> Salary</dt>
+                    <dd class="meta-item__value">
+                      {{ job()!.salaryMin | number:'1.0-0' }}–{{ job()!.salaryMax | number:'1.0-0' }} LPA
+                    </dd>
+                  </div>
+                }
+                <div class="meta-item">
+                  <dt class="meta-item__label"><i class="pi pi-users" aria-hidden="true"></i> Applicants</dt>
+                  <dd class="meta-item__value">{{ job()!.applicationCount }}</dd>
+                </div>
+                <div class="meta-item">
+                  <dt class="meta-item__label"><i class="pi pi-calendar" aria-hidden="true"></i> Posted</dt>
+                  <dd class="meta-item__value">{{ job()!.createdAt | date:'mediumDate' }}</dd>
+                </div>
+                <div class="meta-item">
+                  <dt class="meta-item__label">Status</dt>
+                  <dd><app-status-badge [status]="job()!.status" /></dd>
+                </div>
+              </dl>
+            </div>
+          </aside>
+        </div>
+      }
+    </div>

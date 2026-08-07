@@ -1,0 +1,33 @@
+.rdash { padding: var(--space-8) var(--space-10); max-width: var(--container-max); }
+
+    .rdash__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6); }
+    .rdash__title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); }
+    .rdash__sub { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-1); }
+
+    .rdash__post-btn { display: inline-flex; align-items: center; gap: var(--space-2); height: 40px; padding: 0 var(--space-4); background: var(--color-primary); color: #fff; font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-decoration: none; transition: background var(--transition-fast); &:hover { background: var(--color-primary-hover); text-decoration: none; } }
+
+    .rdash__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-bottom: var(--space-8); }
+    .stat-card { background: var(--color-background); border: 1px solid var(--color-border); padding: var(--space-4) var(--space-6); border-top: 3px solid var(--color-border); &--green { border-top-color: var(--color-success); } &--blue { border-top-color: var(--color-primary); } &--gray { border-top-color: #8d8d8d; } }
+    .stat-card__number { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); line-height: 1; margin-bottom: var(--space-1); }
+    .stat-card__label { font-size: var(--font-size-xs); color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .rdash-section { background: var(--color-background); border: 1px solid var(--color-border); padding: var(--space-4) var(--space-6); }
+    .rdash-section__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+    .rdash-section__title { font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+    .rdash-section__link { font-size: var(--font-size-xs); color: var(--color-primary); font-weight: var(--font-weight-semibold); text-decoration: none; &:hover { text-decoration: underline; } }
+
+    .jobs-table-wrap { overflow-x: auto; }
+    .jobs-table { width: 100%; border-collapse: collapse; font-size: var(--font-size-sm); }
+    .jobs-table th { padding: var(--space-3) var(--space-4); text-align: left; font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; background: var(--color-surface); border-bottom: 2px solid var(--color-border); }
+    .jobs-table td { padding: var(--space-3) var(--space-4); color: var(--color-text-primary); border-bottom: 1px solid var(--color-surface); vertical-align: middle; }
+    .jobs-table tbody tr:hover { background: var(--color-surface); }
+    .td-title { font-weight: var(--font-weight-semibold); }
+    .td-actions { display: flex; align-items: center; gap: var(--space-2); }
+
+    .action-link { font-size: var(--font-size-xs); color: var(--color-text-secondary); text-decoration: none; font-weight: var(--font-weight-semibold); &:hover { color: var(--color-primary); text-decoration: none; } &--primary { color: var(--color-primary); } }
+    .action-btn { background: transparent; border: 1px solid var(--color-border); color: var(--color-danger); padding: var(--space-1) var(--space-2); font-size: 11px; cursor: pointer; &:hover { background: var(--color-danger-bg); } &--close {} }
+
+    .post-link { display: inline-block; margin-top: var(--space-4); background: var(--color-primary); color: #fff; padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-decoration: none; &:hover { background: var(--color-primary-hover); text-decoration: none; } }
+    .skeleton-row { height: 56px; background: var(--color-surface); margin-bottom: var(--space-2); animation: pulse 1.5s ease infinite; }
+    .skeleton-list { display: flex; flex-direction: column; gap: var(--space-2); }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }

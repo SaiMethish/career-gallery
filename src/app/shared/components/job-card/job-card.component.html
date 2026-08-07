@@ -1,0 +1,62 @@
+<article class="job-card" [class.job-card--saved]="saved">
+      <div class="job-card__header">
+        <div class="job-card__company-logo" aria-hidden="true">
+          {{ job.companyName?.charAt(0)?.toUpperCase() }}
+        </div>
+        <div class="job-card__meta">
+          <h3 class="job-card__title">
+            <a [routerLink]="['/candidate/jobs', job.id]" class="job-card__title-link"
+               [id]="'job-link-' + job.id">
+              {{ job.title }}
+            </a>
+          </h3>
+          <p class="job-card__company">{{ job.companyName }}</p>
+        </div>
+        <button class="job-card__save-btn" [class.job-card__save-btn--saved]="saved"
+                (click)="onSaveToggle($event)"
+                [id]="'btn-save-job-' + job.id"
+                [attr.aria-label]="saved ? 'Unsave ' + job.title : 'Save ' + job.title">
+          <i [class]="saved ? 'pi pi-bookmark-fill' : 'pi pi-bookmark'" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="job-card__tags">
+        <span class="job-card__tag job-card__tag--type">{{ formatJobType(job.jobType) }}</span>
+        @if (job.location) {
+          <span class="job-card__tag">
+            <i class="pi pi-map-marker" aria-hidden="true"></i>{{ job.location }}
+          </span>
+        }
+        @if (job.experienceMin !== undefined || job.experienceMax !== undefined) {
+          <span class="job-card__tag">
+            <i class="pi pi-clock" aria-hidden="true"></i>
+            {{ job.experienceMin }}–{{ job.experienceMax }} yrs
+          </span>
+        }
+        @if (job.salaryMin) {
+          <span class="job-card__tag">
+            <i class="pi pi-dollar" aria-hidden="true"></i>
+            {{ job.salaryMin | number:'1.0-0' }}–{{ job.salaryMax | number:'1.0-0' }} LPA
+          </span>
+        }
+      </div>
+
+      @if (job.skills) {
+        <p class="job-card__skills">{{ job.skills }}</p>
+      }
+
+      <div class="job-card__footer">
+        <span class="job-card__date">
+          Posted {{ job.createdAt | date:'mediumDate' }}
+        </span>
+        <span class="job-card__applicants">{{ job.applicationCount }} applicants</span>
+        @if (showApplyButton) {
+          <button class="job-card__apply-btn"
+                  (click)="onApply()"
+                  [id]="'btn-apply-job-' + job.id"
+                  [attr.aria-label]="'Apply to ' + job.title">
+            Apply Now
+          </button>
+        }
+      </div>
+    </article>

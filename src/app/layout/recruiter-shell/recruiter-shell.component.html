@@ -1,0 +1,81 @@
+<div class="shell">
+      <!-- Sidebar -->
+      <nav class="sidebar" aria-label="Recruiter navigation">
+        <div class="sidebar__brand">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect width="32" height="32" fill="#0f62fe"/>
+            <path d="M8 22L16 10L24 22H8Z" fill="white"/>
+          </svg>
+          <span class="sidebar__brand-name">Carbon Talent</span>
+        </div>
+
+        <ul class="sidebar__nav" role="list">
+          <li>
+            <a routerLink="/recruiter/dashboard" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-recruiter-dashboard">
+              <i class="pi pi-home" aria-hidden="true"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/recruiter/jobs" routerLinkActive="sidebar__link--active"
+               [routerLinkActiveOptions]="{ exact: false }"
+               class="sidebar__link" id="nav-manage-jobs">
+              <i class="pi pi-briefcase" aria-hidden="true"></i>
+              <span>Manage Jobs</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/recruiter/jobs/new" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-post-job">
+              <i class="pi pi-plus-circle" aria-hidden="true"></i>
+              <span>Post a Job</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/recruiter/profile" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-company-profile">
+              <i class="pi pi-building" aria-hidden="true"></i>
+              <span>Company Profile</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sidebar__footer">
+          <a routerLink="/notifications" routerLinkActive="sidebar__link--active"
+             class="sidebar__link" id="nav-recruiter-notifications">
+            <i class="pi pi-bell" aria-hidden="true"></i>
+            <span>Notifications</span>
+          </a>
+          <a routerLink="/settings" routerLinkActive="sidebar__link--active"
+             class="sidebar__link" id="nav-recruiter-settings">
+            <i class="pi pi-cog" aria-hidden="true"></i>
+            <span>Settings</span>
+          </a>
+          <button class="sidebar__link sidebar__logout" (click)="logout()" id="btn-recruiter-logout"
+                  aria-label="Log out">
+            <i class="pi pi-sign-out" aria-hidden="true"></i>
+            <span>Log out</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Main area -->
+      <div class="shell__main">
+        <header class="shell__header" role="banner">
+          <div class="shell__header-left">
+            <span class="shell__role-badge">Recruiter</span>
+          </div>
+          <div class="shell__header-right">
+            <app-notification-bell />
+            <div class="shell__user">
+              <div class="shell__user-avatar" aria-hidden="true">{{ userInitial() }}</div>
+              <span class="shell__user-email">{{ (currentUser$ | async)?.email }}</span>
+            </div>
+          </div>
+        </header>
+        <main class="shell__content" id="main-content" role="main">
+          <router-outlet />
+        </main>
+      </div>
+    </div>

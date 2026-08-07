@@ -1,0 +1,36 @@
+<div class="manage-jobs fade-in">
+      <div class="header">
+        <h1 class="title">Manage Jobs</h1>
+        <a routerLink="/recruiter/jobs/new" class="post-btn">Post a Job</a>
+      </div>
+
+      @if (isLoading()) {
+        <p>Loading...</p>
+      } @else if (jobs().length === 0) {
+        <app-empty-state icon="pi-briefcase" title="No jobs yet" />
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (job of jobs(); track job.id) {
+              <tr>
+                <td>{{ job.title }}</td>
+                <td><app-status-badge [status]="job.status" /></td>
+                <td>{{ job.createdAt | date }}</td>
+                <td>
+                  <a [routerLink]="['/recruiter/jobs', job.id, 'edit']">Edit</a>
+                  <a [routerLink]="['/recruiter/jobs', job.id, 'applicants']">Applicants</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>

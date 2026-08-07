@@ -1,0 +1,49 @@
+<div class="applications fade-in">
+      <div class="applications__header">
+        <h1 class="applications__title">My Applications</h1>
+        <p class="applications__sub">{{ applications().length }} total applications</p>
+      </div>
+
+      @if (isLoading()) {
+        <div class="skeleton-list">
+          @for (i of [1,2,3]; track i) { <div class="skeleton-row"></div> }
+        </div>
+      } @else if (applications().length === 0) {
+        <app-empty-state icon="pi-file" title="No applications yet"
+          message="Start applying to jobs to track your progress here." />
+      } @else {
+        <div class="applications__table-wrap" role="region" aria-label="Applications table">
+          <table class="applications__table" role="grid">
+            <thead>
+              <tr>
+                <th scope="col">Job Title</th>
+                <th scope="col">Company</th>
+                <th scope="col">Applied On</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (app of applications(); track app.id) {
+                <tr>
+                  <td class="td-title">{{ app.jobTitle }}</td>
+                  <td>{{ app.companyName }}</td>
+                  <td>{{ app.appliedAt | date:'mediumDate' }}</td>
+                  <td><app-status-badge [status]="app.status" /></td>
+                  <td>
+                    @if (app.status === JobApplicationStatus.APPLIED) {
+                      <button class="withdraw-btn"
+                              (click)="withdraw(app.id)"
+                              [id]="'btn-withdraw-' + app.id"
+                              aria-label="Withdraw application for {{ app.jobTitle }}">
+                        Withdraw
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>

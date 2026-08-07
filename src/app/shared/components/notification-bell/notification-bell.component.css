@@ -1,0 +1,20 @@
+.notification-bell {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      color: var(--color-text-secondary);
+      border-radius: 50%;
+      transition: background var(--transition-fast), color var(--transition-fast);
+      text-decoration: none;
+
+      i { font-size: 18px; }
+
+      &:hover {
+        background: var(--color-surface);
+        color: var(--color-text-primary);
+        text-decoration: none;
+      }
+    }

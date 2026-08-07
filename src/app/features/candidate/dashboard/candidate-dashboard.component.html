@@ -1,0 +1,129 @@
+<div class="dashboard fade-in">
+      <!-- Welcome banner -->
+      <div class="dashboard__welcome">
+        <div>
+          <h1 class="dashboard__welcome-title">
+            Welcome back, {{ profile()?.fullName || (currentUser$ | async)?.email }}
+          </h1>
+          <p class="dashboard__welcome-sub">Here's your career activity at a glance.</p>
+        </div>
+        <a routerLink="/candidate/profile" class="dashboard__complete-btn" id="btn-complete-profile">
+          <i class="pi pi-user" aria-hidden="true"></i>
+          Complete profile
+        </a>
+      </div>
+
+      <!-- Stats row -->
+      <div class="dashboard__stats">
+        <div class="stat-card">
+          <p class="stat-card__number">{{ applications().length }}</p>
+          <p class="stat-card__label">Total Applications</p>
+        </div>
+        <div class="stat-card stat-card--blue">
+          <p class="stat-card__number">{{ activeApplications() }}</p>
+          <p class="stat-card__label">Active</p>
+        </div>
+        <div class="stat-card stat-card--green">
+          <p class="stat-card__number">{{ savedJobs().length }}</p>
+          <p class="stat-card__label">Saved Jobs</p>
+        </div>
+        <div class="stat-card stat-card--purple">
+          <p class="stat-card__number">{{ profile()?.skills?.length || 0 }}</p>
+          <p class="stat-card__label">Skills Listed</p>
+        </div>
+      </div>
+
+      <div class="dashboard__grid">
+        <!-- Recent Applications -->
+        <section class="dashboard-section" aria-labelledby="recent-apps-heading">
+          <div class="dashboard-section__header">
+            <h2 id="recent-apps-heading" class="dashboard-section__title">Recent Applications</h2>
+            <a routerLink="/candidate/applications" class="dashboard-section__link"
+               id="link-all-applications">View all</a>
+          </div>
+
+          @if (isLoadingApps()) {
+            <div class="dashboard__skeleton">
+              @for (i of [1,2,3]; track i) {
+                <div class="skeleton-row"></div>
+              }
+            </div>
+          } @else if (applications().length === 0) {
+            <app-empty-state icon="pi-file" title="No applications yet"
+              message="Browse jobs and apply to get started." />
+          } @else {
+            <ul class="application-list" role="list">
+              @for (app of applications().slice(0, 5); track app.id) {
+                <li class="application-item">
+                  <div class="application-item__info">
+                    <p class="application-item__title">{{ app.jobTitle }}</p>
+                    <p class="application-item__company">{{ app.companyName }}</p>
+                  </div>
+                  <div class="application-item__right">
+                    <app-status-badge [status]="app.status" />
+                    <span class="application-item__date">{{ app.appliedAt | date:'mediumDate' }}</span>
+                  </div>
+                </li>
+              }
+            </ul>
+          }
+        </section>
+
+        <!-- Profile Completeness -->
+        <section class="dashboard-section profile-section" aria-labelledby="profile-heading">
+          <h2 id="profile-heading" class="dashboard-section__title">Profile Strength</h2>
+          <div class="profile-strength">
+            <div class="profile-strength__bar-bg">
+              <div class="profile-strength__bar"
+                   [style.width.%]="profileStrength()"
+                   [attr.aria-valuenow]="profileStrength()"
+                   role="progressbar" aria-valuemin="0" aria-valuemax="100">
+              </div>
+            </div>
+            <p class="profile-strength__label">{{ profileStrength() }}% complete</p>
+          </div>
+          <ul class="profile-checklist" role="list">
+            <li class="profile-check" [class.profile-check--done]="!!profile()?.fullName">
+              <i [class]="'pi ' + (profile()?.fullName ? 'pi-check-circle' : 'pi-circle')" aria-hidden="true"></i>
+              Full name
+            </li>
+            <li class="profile-check" [class.profile-check--done]="!!profile()?.phone">
+              <i [class]="'pi ' + (profile()?.phone ? 'pi-check-circle' : 'pi-circle')" aria-hidden="true"></i>
+              Phone number
+            </li>
+            <li class="profile-check" [class.profile-check--done]="(profile()?.skills?.length ?? 0) > 0">
+              <i [class]="'pi ' + ((profile()?.skills?.length ?? 0) > 0 ? 'pi-check-circle' : 'pi-circle')" aria-hidden="true"></i>
+              Skills listed
+            </li>
+            <li class="profile-check" [class.profile-check--done]="!!profile()?.resumeUrl">
+              <i [class]="'pi ' + (profile()?.resumeUrl ? 'pi-check-circle' : 'pi-circle')" aria-hidden="true"></i>
+              Resume uploaded
+            </li>
+          </ul>
+          <a routerLink="/candidate/profile" class="profile-edit-link" id="btn-edit-profile">
+            Edit profile <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </section>
+      </div>
+
+      <!-- Recent Job Listings -->
+      <section class="dashboard-section" aria-labelledby="jobs-heading">
+        <div class="dashboard-section__header">
+          <h2 id="jobs-heading" class="dashboard-section__title">Latest Jobs</h2>
+          <a routerLink="/candidate/jobs" class="dashboard-section__link" id="link-browse-jobs">Browse all</a>
+        </div>
+        @if (isLoadingJobs()) {
+          <div class="jobs-skeleton">
+            @for (i of [1,2]; track i) { <div class="skeleton-card"></div> }
+          </div>
+        } @else if (recentJobs().length === 0) {
+          <app-empty-state icon="pi-briefcase" title="No jobs available" message="Check back soon." />
+        } @else {
+          <div class="jobs-grid">
+            @for (job of recentJobs(); track job.id) {
+              <app-job-card [job]="job" [showApplyButton]="false" (saveToggled)="onSaveJob($event)" />
+            }
+          </div>
+        }
+      </section>
+    </div>

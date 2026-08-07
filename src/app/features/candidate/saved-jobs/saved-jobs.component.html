@@ -1,0 +1,23 @@
+<div class="saved-jobs fade-in">
+      <div class="saved-jobs__header">
+        <h1 class="saved-jobs__title">Saved Jobs</h1>
+        <p class="saved-jobs__sub">{{ jobs().length }} saved jobs</p>
+      </div>
+
+      @if (isLoading()) {
+        <div class="skeleton-list">
+          @for (i of [1,2,3]; track i) { <div class="skeleton-card"></div> }
+        </div>
+      } @else if (jobs().length === 0) {
+        <app-empty-state icon="pi-bookmark" title="No saved jobs"
+          message="Browse jobs and save them here to apply later." />
+      } @else {
+        <div class="jobs-list">
+          @for (job of jobs(); track job.id) {
+            <app-job-card [job]="job" [saved]="true"
+                          (saveToggled)="onUnsave($event)"
+                          (applied)="onApply($event)" />
+          }
+        </div>
+      }
+    </div>

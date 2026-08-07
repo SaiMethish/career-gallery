@@ -1,0 +1,99 @@
+<div class="shell">
+      <!-- Sidebar -->
+      <nav class="sidebar" aria-label="Candidate navigation">
+        <div class="sidebar__brand">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect width="32" height="32" fill="#0f62fe"/>
+            <path d="M8 22L16 10L24 22H8Z" fill="white"/>
+          </svg>
+          <span class="sidebar__brand-name">Carbon Talent</span>
+        </div>
+
+        <ul class="sidebar__nav" role="list">
+          <li>
+            <a routerLink="/candidate/dashboard" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-dashboard">
+              <i class="pi pi-home" aria-hidden="true"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/candidate/jobs" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-browse-jobs">
+              <i class="pi pi-briefcase" aria-hidden="true"></i>
+              <span>Browse Jobs</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/candidate/recommendations" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-ai-recs">
+              <i class="pi pi-sparkles" aria-hidden="true"></i>
+              <span>AI Recommended</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/candidate/applications" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-applications">
+              <i class="pi pi-list-check" aria-hidden="true"></i>
+              <span>My Applications</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/candidate/saved-jobs" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-saved-jobs">
+              <i class="pi pi-bookmark" aria-hidden="true"></i>
+              <span>Saved Jobs</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/candidate/profile" routerLinkActive="sidebar__link--active"
+               class="sidebar__link" id="nav-profile">
+              <i class="pi pi-user" aria-hidden="true"></i>
+              <span>My Profile</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sidebar__footer">
+          <a routerLink="/notifications" routerLinkActive="sidebar__link--active"
+             class="sidebar__link" id="nav-notifications">
+            <i class="pi pi-bell" aria-hidden="true"></i>
+            <span>Notifications</span>
+          </a>
+          <a routerLink="/settings" routerLinkActive="sidebar__link--active"
+             class="sidebar__link" id="nav-settings">
+            <i class="pi pi-cog" aria-hidden="true"></i>
+            <span>Settings</span>
+          </a>
+          <button class="sidebar__link sidebar__logout" (click)="logout()" id="btn-logout"
+                  aria-label="Log out">
+            <i class="pi pi-sign-out" aria-hidden="true"></i>
+            <span>Log out</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Main area -->
+      <div class="shell__main">
+        <!-- Top header -->
+        <header class="shell__header" role="banner">
+          <div class="shell__header-left">
+            <h1 class="shell__page-title">{{ pageTitle() }}</h1>
+          </div>
+          <div class="shell__header-right">
+            <app-notification-bell />
+            <div class="shell__user" aria-label="Current user">
+              <div class="shell__user-avatar" aria-hidden="true">
+                {{ userInitial$ | async }}
+              </div>
+              <span class="shell__user-email">{{ (currentUser$ | async)?.email }}</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Page content -->
+        <main class="shell__content" id="main-content" role="main">
+          <router-outlet />
+        </main>
+      </div>
+    </div>

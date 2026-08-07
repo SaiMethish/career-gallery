@@ -1,0 +1,90 @@
+<div class="rdash fade-in">
+      <div class="rdash__header">
+        <div>
+          <h1 class="rdash__title">Recruiter Console</h1>
+          <p class="rdash__sub">Manage your job postings and candidates.</p>
+        </div>
+        <a routerLink="/recruiter/jobs/new" class="rdash__post-btn" id="btn-post-new-job">
+          <i class="pi pi-plus" aria-hidden="true"></i>
+          Post a Job
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="rdash__stats">
+        <div class="stat-card">
+          <p class="stat-card__number">{{ totalJobs() }}</p>
+          <p class="stat-card__label">Total Jobs Posted</p>
+        </div>
+        <div class="stat-card stat-card--green">
+          <p class="stat-card__number">{{ openJobs() }}</p>
+          <p class="stat-card__label">Active Jobs</p>
+        </div>
+        <div class="stat-card stat-card--blue">
+          <p class="stat-card__number">{{ totalApplicants() }}</p>
+          <p class="stat-card__label">Total Applicants</p>
+        </div>
+        <div class="stat-card stat-card--gray">
+          <p class="stat-card__number">{{ closedJobs() }}</p>
+          <p class="stat-card__label">Closed Jobs</p>
+        </div>
+      </div>
+
+      <!-- Recent Jobs -->
+      <section class="rdash-section" aria-labelledby="jobs-heading">
+        <div class="rdash-section__header">
+          <h2 id="jobs-heading" class="rdash-section__title">Recent Job Postings</h2>
+          <a routerLink="/recruiter/jobs" class="rdash-section__link" id="link-manage-all">Manage all</a>
+        </div>
+
+        @if (isLoading()) {
+          <div class="skeleton-list">
+            @for (i of [1,2,3]; track i) { <div class="skeleton-row"></div> }
+          </div>
+        } @else if (jobs().length === 0) {
+          <app-empty-state icon="pi-briefcase" title="No jobs posted yet"
+            message="Post your first job to start finding candidates.">
+            <a routerLink="/recruiter/jobs/new" class="post-link">Post a Job</a>
+          </app-empty-state>
+        } @else {
+          <div class="jobs-table-wrap">
+            <table class="jobs-table" role="grid">
+              <thead>
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Applicants</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Posted</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (job of jobs().slice(0, 5); track job.id) {
+                  <tr>
+                    <td class="td-title">{{ job.title }}</td>
+                    <td>{{ job.location || '—' }}</td>
+                    <td>{{ job.applicationCount }}</td>
+                    <td><app-status-badge [status]="job.status" /></td>
+                    <td>{{ job.createdAt | date:'mediumDate' }}</td>
+                    <td class="td-actions">
+                      <a [routerLink]="['/recruiter/jobs', job.id, 'edit']"
+                         class="action-link" [id]="'btn-edit-job-' + job.id" aria-label="Edit {{ job.title }}">Edit</a>
+                      <a [routerLink]="['/recruiter/jobs', job.id, 'applicants']"
+                         class="action-link action-link--primary" [id]="'btn-view-applicants-' + job.id"
+                         aria-label="View applicants for {{ job.title }}">Applicants</a>
+                      @if (job.status === JobStatus.OPEN) {
+                        <button class="action-btn action-btn--close" (click)="closeJob(job.id)"
+                                [id]="'btn-close-job-' + job.id" aria-label="Close {{ job.title }}">
+                          Close
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    </div>

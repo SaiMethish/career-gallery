@@ -1,0 +1,68 @@
+/* Shares sidebar/shell CSS via global styles.scss — repeated key rules for encapsulation */
+    .shell { display: flex; height: 100vh; overflow: hidden; }
+
+    .sidebar {
+      width: var(--sidebar-width); flex-shrink: 0;
+      background: var(--color-sidebar-bg);
+      display: flex; flex-direction: column; overflow-y: auto;
+    }
+
+    .sidebar__brand {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-4); border-bottom: 1px solid #393939;
+      min-height: var(--header-height);
+    }
+
+    .sidebar__brand-name {
+      font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold);
+      color: var(--color-sidebar-text-active);
+    }
+
+    .sidebar__nav { flex: 1; list-style: none; padding: var(--space-2) 0; }
+
+    .sidebar__link {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: 0 var(--space-4); height: 40px;
+      color: var(--color-sidebar-text); font-size: var(--font-size-sm);
+      text-decoration: none; transition: background var(--transition-fast), color var(--transition-fast);
+      border: none; background: transparent; cursor: pointer; width: 100%; text-align: left;
+      i { font-size: 16px; }
+      &:hover { background: var(--color-sidebar-hover-bg); color: var(--color-sidebar-text-active); text-decoration: none; }
+      &.sidebar__link--active { background: var(--color-sidebar-active-bg); color: var(--color-sidebar-text-active); border-left: 2px solid var(--color-primary); }
+    }
+
+    .sidebar__footer { border-top: 1px solid #393939; padding: var(--space-2) 0; }
+    .sidebar__logout { color: #ffb3b8; &:hover { background: #2d0f12; color: #ff8389; } }
+
+    .shell__main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .shell__header {
+      display: flex; align-items: center; justify-content: space-between;
+      height: var(--header-height); padding: 0 var(--space-6);
+      background: var(--color-background); border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    .shell__role-badge {
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+      background: var(--color-primary-subtle); color: var(--color-primary);
+      padding: 2px var(--space-2); text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    .shell__header-right { display: flex; align-items: center; gap: var(--space-4); }
+
+    .shell__user { display: flex; align-items: center; gap: var(--space-2); }
+
+    .shell__user-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--color-primary); color: #fff;
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);
+      display: flex; align-items: center; justify-content: center; text-transform: uppercase;
+    }
+
+    .shell__user-email {
+      font-size: var(--font-size-xs); color: var(--color-text-secondary);
+      max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    .shell__content { flex: 1; overflow-y: auto; background: var(--color-surface); }

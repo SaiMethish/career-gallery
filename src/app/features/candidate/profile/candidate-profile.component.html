@@ -1,0 +1,119 @@
+<div class="profile fade-in">
+      <div class="profile__header">
+        <h1 class="profile__title">My Profile</h1>
+      </div>
+
+      <div class="profile__layout">
+        <!-- Profile form -->
+        <section class="profile-card" aria-labelledby="profile-form-heading">
+          <h2 id="profile-form-heading" class="profile-card__title">Personal Information</h2>
+
+          @if (isLoading()) {
+            <div class="skeleton-form">
+              @for (i of [1,2,3,4]; track i) { <div class="skeleton-row"></div> }
+            </div>
+          } @else {
+            <form [formGroup]="profileForm" (ngSubmit)="onSave()" class="profile-form" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="fullName" class="form-label">Full Name</label>
+                  <input id="fullName" type="text" pInputText formControlName="fullName"
+                         class="form-input" placeholder="Your full name" aria-required="true"/>
+                </div>
+                <div class="form-field">
+                  <label for="phone" class="form-label">Phone</label>
+                  <input id="phone" type="tel" pInputText formControlName="phone"
+                         class="form-input" placeholder="+91 00000 00000"/>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="location" class="form-label">Location</label>
+                  <input id="location" type="text" pInputText formControlName="location"
+                         class="form-input" placeholder="e.g. Bangalore, India"/>
+                </div>
+                <div class="form-field">
+                  <label for="experienceYears" class="form-label">Years of Experience</label>
+                  <input id="experienceYears" type="number" pInputText formControlName="experienceYears"
+                         class="form-input" placeholder="0" min="0"/>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="skills" class="form-label">Skills (press Enter to add)</label>
+                <div class="custom-chips-input" (click)="skillInput.focus()">
+                  @for (skill of profileForm.get('skills')?.value || []; track skill; let i = $index) {
+                    <p-chip [label]="skill" [removable]="true" (onRemove)="removeSkill(i)"></p-chip>
+                  }
+                  <input #skillInput type="text" class="chip-input" placeholder="Add skills..." 
+                         (keydown.enter)="$event.preventDefault(); addSkill(skillInput)"
+                         (keydown.comma)="$event.preventDefault(); addSkill(skillInput)">
+                </div>
+              </div>
+
+              <div class="profile-form__actions">
+                <button type="submit" id="btn-save-profile" class="save-btn"
+                        [disabled]="profileForm.invalid || isSaving()"
+                        aria-label="Save profile changes">
+                  @if (isSaving()) {
+                    <i class="pi pi-spinner pi-spin" aria-hidden="true"></i> Saving...
+                  } @else {
+                    Save Changes
+                  }
+                </button>
+              </div>
+            </form>
+          }
+        </section>
+
+        <!-- Resume section -->
+        <section class="profile-card" aria-labelledby="resume-heading">
+          <h2 id="resume-heading" class="profile-card__title">Resume</h2>
+
+          @if (profile()?.resumeUrl) {
+            <div class="resume-current">
+              <div class="resume-current__icon" aria-hidden="true">
+                <i class="pi pi-file-pdf"></i>
+              </div>
+              <div class="resume-current__info">
+                <p class="resume-current__name">resume.pdf</p>
+                <p class="resume-current__status text-success">
+                  <i class="pi pi-check-circle" aria-hidden="true"></i> Uploaded
+                </p>
+              </div>
+            </div>
+          }
+
+          <div class="resume-upload" [class.resume-upload--dragging]="isDragging()"
+               (dragover)="onDragOver($event)" (dragleave)="isDragging.set(false)"
+               (drop)="onDrop($event)">
+            <i class="pi pi-upload" aria-hidden="true"></i>
+            <p class="resume-upload__label">Drag & drop your resume here</p>
+            <p class="resume-upload__hint">PDF, DOC, DOCX — max 5MB</p>
+            <label for="resume-file" class="resume-upload__btn" aria-label="Browse for resume file">
+              Browse File
+            </label>
+            <input id="resume-file" type="file" accept=".pdf,.doc,.docx"
+                   (change)="onFileChange($event)" class="resume-upload__input"
+                   aria-label="Upload resume"/>
+          </div>
+
+          @if (parsedResume()) {
+            <div class="parsed-preview" aria-labelledby="parsed-heading">
+              <h3 id="parsed-heading" class="parsed-preview__title">
+                <i class="pi pi-sparkles" aria-hidden="true"></i>
+                Parsed from resume
+              </h3>
+              <p class="parsed-preview__hint">
+                Apply this data to auto-fill your profile?
+              </p>
+              <button class="apply-parsed-btn" (click)="applyParsedResume()"
+                      id="btn-apply-parsed" aria-label="Apply parsed resume data to profile">
+                Apply to Profile
+              </button>
+            </div>
+          }
+        </section>
+      </div>
+    </div>

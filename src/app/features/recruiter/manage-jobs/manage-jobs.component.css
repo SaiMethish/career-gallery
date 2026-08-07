@@ -1,0 +1,6 @@
+.manage-jobs { padding: 2rem; max-width: var(--container-max); }
+    .header { display: flex; justify-content: space-between; margin-bottom: 2rem; }
+    .title { font-size: 2rem; }
+    .post-btn { background: var(--color-primary); color: white; padding: 0.5rem 1rem; text-decoration: none; }
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 1rem; border-bottom: 1px solid var(--color-border); text-align: left; }

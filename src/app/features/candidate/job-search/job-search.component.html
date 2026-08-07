@@ -1,0 +1,99 @@
+<div class="job-search fade-in">
+      <!-- Page header -->
+      <div class="job-search__header">
+        <h1 class="job-search__title">Browse Jobs</h1>
+        <p class="job-search__sub">{{ totalElements() }} jobs found</p>
+      </div>
+
+      <div class="job-search__layout">
+        <!-- Filters sidebar -->
+        <aside class="filter-panel" aria-label="Job filters">
+          <h2 class="filter-panel__title">Filters</h2>
+          <form [formGroup]="filterForm" class="filter-form">
+            <div class="filter-group">
+              <label for="search-title" class="filter-label">Job title or keyword</label>
+              <input id="search-title" type="text" pInputText formControlName="title"
+                     class="filter-input" placeholder="e.g. Software Engineer"
+                     aria-label="Search by job title"/>
+            </div>
+
+            <div class="filter-group">
+              <label for="search-location" class="filter-label">Location</label>
+              <input id="search-location" type="text" pInputText formControlName="location"
+                     class="filter-input" placeholder="e.g. Bangalore" aria-label="Filter by location"/>
+            </div>
+
+            <div class="filter-group">
+              <label for="search-skills" class="filter-label">Skills</label>
+              <input id="search-skills" type="text" pInputText formControlName="skills"
+                     class="filter-input" placeholder="e.g. React, Node.js" aria-label="Filter by skills"/>
+            </div>
+
+            <div class="filter-group">
+              <label id="job-type-label" class="filter-label">Job type</label>
+              <p-select formControlName="jobType" [options]="jobTypeOptions"
+                        optionLabel="label" optionValue="value"
+                        placeholder="Any type" [showClear]="true"
+                        styleClass="filter-select" aria-labelledby="job-type-label" />
+            </div>
+
+            <div class="filter-group">
+              <label class="filter-label">Experience (years)</label>
+              <div class="filter-range">
+                <input id="exp-min" type="number" pInputText formControlName="experienceMin"
+                       class="filter-input" placeholder="Min" min="0" aria-label="Minimum experience"/>
+                <span class="filter-range__sep">–</span>
+                <input id="exp-max" type="number" pInputText formControlName="experienceMax"
+                       class="filter-input" placeholder="Max" min="0" aria-label="Maximum experience"/>
+              </div>
+            </div>
+
+            <button type="button" class="filter-clear-btn" (click)="clearFilters()"
+                    id="btn-clear-filters" aria-label="Clear all filters">
+              Clear all filters
+            </button>
+          </form>
+        </aside>
+
+        <!-- Results -->
+        <main class="job-results" id="main-content">
+          @if (isLoading()) {
+            <div class="jobs-skeleton">
+              @for (i of [1,2,3,4,5]; track i) {
+                <div class="skeleton-card"></div>
+              }
+            </div>
+          } @else if (jobs().length === 0) {
+            <app-empty-state icon="pi-search" title="No jobs found"
+              message="Try adjusting your search filters." />
+          } @else {
+            <div class="jobs-list">
+              @for (job of jobs(); track job.id) {
+                <app-job-card [job]="job" [saved]="isSaved(job.id)"
+                              (saveToggled)="onSaveToggle($event)"
+                              (applied)="onApply($event)" />
+              }
+            </div>
+
+            <!-- Pagination -->
+            @if (totalPages() > 1) {
+              <div class="pagination" role="navigation" aria-label="Job results pagination">
+                <button class="pagination__btn" (click)="goToPage(currentPage() - 1)"
+                        [disabled]="currentPage() === 0" id="btn-prev-page"
+                        aria-label="Previous page">
+                  <i class="pi pi-chevron-left" aria-hidden="true"></i>
+                </button>
+                <span class="pagination__info">
+                  Page {{ currentPage() + 1 }} of {{ totalPages() }}
+                </span>
+                <button class="pagination__btn" (click)="goToPage(currentPage() + 1)"
+                        [disabled]="currentPage() + 1 >= totalPages()" id="btn-next-page"
+                        aria-label="Next page">
+                  <i class="pi pi-chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            }
+          }
+        </main>
+      </div>
+    </div>
