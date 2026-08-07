@@ -1,92 +1,247 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================================
+   CareerGallery — Global Styles
+   Carbon Enterprise Design System (Stitch project 12568717960499847111)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import 'primeicons/primeicons.css';
+
+/* ── Design Tokens ──────────────────────────────────────────── */
 :root {
-  /* Static defaults for PrimeNG variables to prevent FOUC / layout flash on page load */
-  --p-primary-color: #4F46E5;
-  --p-primary-contrast-color: #ffffff;
+  /* Colors */
+  --color-primary: #0f62fe;
+  --color-primary-hover: #0043ce;
+  --color-primary-active: #002d9c;
+  --color-primary-subtle: #edf5ff;
 
-  --p-surface-50: #F9FAFB;
-  --p-surface-0: #ffffff;
-  --p-surface-900: #111827;
-  --p-surface-500: #6B7280;
+  --color-background: #ffffff;
+  --color-surface: #f4f4f4;
+  --color-surface-hover: #e8e8e8;
+  --color-border: #e0e0e0;
+  --color-border-subtle: #f4f4f4;
 
-  --p-content-border-color: #E5E7EB;
+  --color-text-primary: #161616;
+  --color-text-secondary: #525252;
+  --color-text-placeholder: #8d8d8d;
+  --color-text-disabled: #c6c6c6;
+  --color-text-inverse: #ffffff;
+  --color-text-link: #0f62fe;
 
-  --p-brand-secondary-500: #06B6D4;
-  --p-brand-accent-500: #A54100;
+  --color-success: #198038;
+  --color-success-bg: #defbe6;
+  --color-warning: #f1c21b;
+  --color-warning-bg: #fdf4dc;
+  --color-danger: #da1e28;
+  --color-danger-bg: #fff1f1;
+  --color-info: #0043ce;
+  --color-info-bg: #edf5ff;
 
-  --p-border-radius-lg: 16px;
+  /* Sidebar */
+  --color-sidebar-bg: #161616;
+  --color-sidebar-text: #c6c6c6;
+  --color-sidebar-text-active: #ffffff;
+  --color-sidebar-active-bg: #393939;
+  --color-sidebar-hover-bg: #262626;
 
-  /* Global variable aliases mapping */
-  --primary-color: var(--p-primary-color);
-  --primary-color-text: var(--p-primary-contrast-color);
+  /* Typography */
+  --font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
 
-  --surface-ground: var(--p-surface-50);
-  --surface-card: var(--p-surface-0);
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  --font-size-4xl: 40px;
 
-  --text-color: var(--p-surface-900);
-  --text-color-secondary: var(--p-surface-500);
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
-  --border-color: var(--p-content-border-color);
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
 
-  --secondary-color: var(--p-brand-secondary-500);
-  --accent-color: var(--p-brand-accent-500);
+  /* Spacing (8px grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
 
-  --border-radius: var(--p-border-radius-lg);
+  /* Layout */
+  --container-max: 1280px;
+  --sidebar-width: 240px;
+  --header-height: 48px;
+
+  /* Elevation */
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
 }
 
-@import "primeicons/primeicons.css";
-
-/* Global defaults for the app */
-html {
-  font-size: 100%; /* Keep rem base at 16px — scaling handled via zoom on body */
-}
-
-/* Global heading and paragraph margin resets to prevent browser spacing blowups */
-h1, h2, h3, h4, h5, h6, p {
-  margin-top: 0;
-  margin-bottom: 0.4rem;
-}
-
-/* Global PrimeNG Card body padding reduction */
-.p-card-body {
-  padding: 1rem !important;
-}
-
-html,
-body {
-  height: 100%;
+/* ── Reset & Base ───────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
 }
 
-body,
-.p-component {
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background-color: var(--p-surface-0);
-  color: var(--text-color);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100%;
-  line-height: 1.5;
-  /*
-   * 90% zoom: uniformly scales ALL CSS properties — font-size, width, height,
-   * padding, margin, border-radius — including px-based values from PrimeNG.
-   * Pattern: 1000px original → 900px scaled (1000 × 0.9 = 900).
-   */
-  zoom: 0.9;
 }
 
-/* Optional utility: use for containers that should use card background */
-.surface-card {
-  background-color: var(--surface-card);
+a {
+  color: var(--color-text-link);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-/* Ensure app root fills full width with no gaps */
-app-root, app-layout {
+img,
+svg {
   display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* ── Typography Utilities ───────────────────────────────────── */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+.font-light { font-weight: var(--font-weight-light); }
+.font-regular { font-weight: var(--font-weight-regular); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-placeholder { color: var(--color-text-placeholder); }
+.text-link { color: var(--color-text-link); }
+.text-success { color: var(--color-success); }
+.text-danger { color: var(--color-danger); }
+
+/* ── Layout Utilities ───────────────────────────────────────── */
+.container {
   width: 100%;
-  min-height: 100vh;
-  background-color: var(--p-surface-0);
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-10);
+}
+
+.page-content {
+  padding: var(--space-8) var(--space-10);
+  max-width: var(--container-max);
+}
+
+/* ── Status Badge Colors ────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.badge-applied    { background: var(--color-info-bg);    color: var(--color-info); }
+.badge-shortlisted { background: #ede0ff;                color: #6929c4; }
+.badge-interview  { background: var(--color-warning-bg); color: #8a3800; }
+.badge-offered    { background: var(--color-success-bg); color: var(--color-success); }
+.badge-hired      { background: var(--color-success-bg); color: var(--color-success); }
+.badge-rejected   { background: var(--color-danger-bg);  color: var(--color-danger); }
+.badge-withdrawn  { background: var(--color-surface);    color: var(--color-text-secondary); }
+.badge-open       { background: var(--color-success-bg); color: var(--color-success); }
+.badge-closed     { background: var(--color-surface);    color: var(--color-text-secondary); }
+
+/* ── PrimeNG Overrides ──────────────────────────────────────── */
+.p-button {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  height: 40px;
+  min-height: 40px;
+  border-radius: 0;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.p-inputtext,
+.p-select {
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid var(--color-border);
+  background: var(--color-surface);
+  height: 40px;
+  font-size: var(--font-size-sm);
+
+  &:focus,
+  &:focus-visible {
+    border-bottom-color: var(--color-primary);
+    outline: none;
+  }
+}
+
+.p-card {
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid var(--color-border);
+}
+
+.p-toast {
+  .p-toast-message {
+    border-radius: 0;
+  }
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fade-in 200ms ease both;
 }

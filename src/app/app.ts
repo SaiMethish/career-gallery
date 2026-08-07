@@ -1,14 +1,15 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Button } from 'primeng/button';
-import { Layout } from "./components/layout/layout";
+import { Toast } from 'primeng/toast';
 
+/** Root application component — renders the global toast and the router outlet */
 @Component({
   selector: 'app-root',
-  imports: [ Layout],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  standalone: true,
+  imports: [RouterOutlet, Toast],
+  template: `
+    <p-toast position="top-right" />
+    <router-outlet />
+  `,
 })
-export class App {
-  
-}
+export class App {}
