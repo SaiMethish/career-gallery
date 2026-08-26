@@ -43,7 +43,7 @@ export const routes: Routes = [
 
   // OAuth callback (no shell)
   {
-    path: 'oauth-callback',
+    path: 'oauth-success',
     loadComponent: () =>
       import('./features/auth/oauth-callback/oauth-callback.component').then(
         (m) => m.OAuthCallbackComponent
@@ -117,6 +117,20 @@ export const routes: Routes = [
           ),
         title: 'My Profile — Carbon Talent',
       },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notifications.component').then(
+            (m) => m.NotificationsComponent
+          ),
+        title: 'Notifications — Carbon Talent',
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/settings.component').then((m) => m.SettingsComponent),
+        title: 'Settings — Carbon Talent',
+      },
     ],
   },
 
@@ -179,25 +193,21 @@ export const routes: Routes = [
           ),
         title: 'Company Profile — Carbon Talent',
       },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notifications.component').then(
+            (m) => m.NotificationsComponent
+          ),
+        title: 'Notifications — Carbon Talent',
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/settings.component').then((m) => m.SettingsComponent),
+        title: 'Settings — Carbon Talent',
+      },
     ],
-  },
-
-  // ── Shared Authenticated Routes ────────────────────────────
-  {
-    path: 'notifications',
-    loadComponent: () =>
-      import('./features/notifications/notifications.component').then(
-        (m) => m.NotificationsComponent
-      ),
-    canActivate: [authGuard],
-    title: 'Notifications — Carbon Talent',
-  },
-  {
-    path: 'settings',
-    loadComponent: () =>
-      import('./features/settings/settings.component').then((m) => m.SettingsComponent),
-    canActivate: [authGuard],
-    title: 'Settings — Carbon Talent',
   },
 
   // ── Error pages ────────────────────────────────────────────

@@ -42,7 +42,7 @@
         </ul>
 
         <div class="sidebar__footer">
-          <a routerLink="/notifications" routerLinkActive="sidebar__link--active"
+          <a routerLink="/recruiter/notifications" routerLinkActive="sidebar__link--active"
              class="sidebar__link" id="nav-recruiter-notifications">
             <i class="pi pi-bell" aria-hidden="true"></i>
             <span>Notifications</span>
@@ -67,9 +67,9 @@
             <span class="shell__role-badge">Recruiter</span>
           </div>
           <div class="shell__header-right">
-            <app-notification-bell />
+            <app-notification-bell routeLink="/recruiter/notifications" />
             <div class="shell__user">
-              <div class="shell__user-avatar" aria-hidden="true">{{ userInitial() }}</div>
+              <div class="shell__user-avatar" aria-hidden="true">{{ userInitial$ | async }}</div>
               <span class="shell__user-email">{{ (currentUser$ | async)?.email }}</span>
             </div>
           </div>

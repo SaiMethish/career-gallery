@@ -55,9 +55,9 @@
         </ul>
 
         <div class="sidebar__footer">
-          <a routerLink="/notifications" routerLinkActive="sidebar__link--active"
-             class="sidebar__link" id="nav-notifications">
-            <i class="pi pi-bell" aria-hidden="true"></i>
+          <a routerLink="/candidate/notifications" routerLinkActive="sidebar__link--active"
+             class="sidebar__link" title="Notifications">
+            <i class="pi pi-bell sidebar__icon" aria-hidden="true"></i>
             <span>Notifications</span>
           </a>
           <a routerLink="/settings" routerLinkActive="sidebar__link--active"
@@ -81,7 +81,7 @@
             <h1 class="shell__page-title">{{ pageTitle() }}</h1>
           </div>
           <div class="shell__header-right">
-            <app-notification-bell />
+            <app-notification-bell routeLink="/candidate/notifications" />
             <div class="shell__user" aria-label="Current user">
               <div class="shell__user-avatar" aria-hidden="true">
                 {{ userInitial$ | async }}

@@ -58,4 +58,14 @@ export class RegisterComponent implements OnInit {
     const { email, password, role } = this.form.value as { email: string; password: string; role: string };
     this.store.dispatch(AuthActions.register({ email, password, role }));
   }
+
+  /** Sign up via Google using the role already selected in the form */
+  continueWithGoogle(): void {
+    const role = this.form.get('role')?.value as string;
+    if (!role) {
+      this.form.get('role')?.markAsTouched();
+      return;
+    }
+    window.location.href = `http://localhost:8080/auth/oauth2/authorize/google?role=${role}`;
+  }
 }

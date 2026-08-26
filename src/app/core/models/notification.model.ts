@@ -1,8 +1,9 @@
 /** Notification type — mirrors backend NotificationType enum */
 export enum NotificationType {
-  APPLICATION_STATUS = 'APPLICATION_STATUS',
-  NEW_JOB = 'NEW_JOB',
-  GENERAL = 'GENERAL',
+  APPLICATION_APPLIED = 'APPLICATION_APPLIED',
+  APPLICATION_SHORTLISTED = 'APPLICATION_SHORTLISTED',
+  APPLICATION_REJECTED = 'APPLICATION_REJECTED',
+  APPLICATION_INTERVIEW = 'APPLICATION_INTERVIEW',
 }
 
 /** Notification — mirrors backend NotificationDTO */

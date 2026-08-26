@@ -1,119 +1,432 @@
-<div class="profile fade-in">
-      <div class="profile__header">
-        <h1 class="profile__title">My Profile</h1>
+<!-- ═══════════════════════════════════════════════════════════
+     Candidate Profile Page
+     ═══════════════════════════════════════════════════════════ -->
+<div class="profile-page">
+
+  <!-- ── Page Header ─────────────────────────────────────────── -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Profile</h1>
+      <p class="page-subtitle">Manage your professional information and resume</p>
+    </div>
+    <button class="btn-primary" (click)="onSave()" [disabled]="profileForm.invalid || isSaving()">
+      @if(isSaving()) {
+        <i class="pi pi-spinner pi-spin"></i> Saving…
+      } @else {
+        <i class="pi pi-check"></i> Save All
+      }
+    </button>
+  </div>
+
+  <div class="profile-grid">
+    <!-- ═══════════════ LEFT COLUMN ═══════════════ -->
+    <aside class="col-left">
+
+      <!-- Profile Identity Card -->
+      <div class="card identity-card">
+        <div class="avatar-wrapper">
+          <div class="avatar">{{ profileForm.get('fullName')?.value?.charAt(0)?.toUpperCase() || 'U' }}</div>
+          <div class="avatar-badge"><i class="pi pi-pencil"></i></div>
+        </div>
+
+        <h2 class="identity-name">{{ profileForm.get('fullName')?.value || 'Your Name' }}</h2>
+        <p class="identity-exp">
+          <i class="pi pi-briefcase"></i>
+          {{ profileForm.get('experienceYears')?.value || 0 }} yrs experience
+        </p>
+        <p class="identity-location" *ngIf="profileForm.get('location')?.value">
+          <i class="pi pi-map-marker"></i>
+          {{ profileForm.get('location')?.value }}
+        </p>
       </div>
 
-      <div class="profile__layout">
-        <!-- Profile form -->
-        <section class="profile-card" aria-labelledby="profile-form-heading">
-          <h2 id="profile-form-heading" class="profile-card__title">Personal Information</h2>
+      <!-- Contact & Basic Info Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Basic Info</span>
+        </div>
+        <form [formGroup]="profileForm" class="info-form">
+          <div class="field-group">
+            <label class="field-label">Full Name</label>
+            <div class="field-input-wrap">
+              <i class="pi pi-user field-icon"></i>
+              <input pInputText formControlName="fullName" placeholder="Your full name" class="field-input" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Phone</label>
+            <div class="field-input-wrap">
+              <i class="pi pi-phone field-icon"></i>
+              <input pInputText formControlName="phone" placeholder="+91 98765 43210" class="field-input" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Location</label>
+            <div class="field-input-wrap">
+              <i class="pi pi-map-marker field-icon"></i>
+              <input pInputText formControlName="location" placeholder="City, Country" class="field-input" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Total Experience (Years)</label>
+            <div class="field-input-wrap">
+              <i class="pi pi-calendar field-icon"></i>
+              <input pInputText formControlName="experienceYears" type="number" min="0" placeholder="0" class="field-input" />
+            </div>
+          </div>
+        </form>
+      </div>
 
-          @if (isLoading()) {
-            <div class="skeleton-form">
-              @for (i of [1,2,3,4]; track i) { <div class="skeleton-row"></div> }
+      <!-- Resume Upload Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Resume</span>
+        </div>
+
+        <!-- Existing resume indicator -->
+        @if (profile()?.resumeUrl) {
+          <div class="resume-file-badge">
+            <div class="resume-file-icon"><i class="pi pi-file-pdf"></i></div>
+            <div class="resume-file-info">
+              <span class="resume-file-name">resume.pdf</span>
+              <span class="resume-file-status"><i class="pi pi-check-circle"></i> Uploaded</span>
+            </div>
+          </div>
+        }
+
+        <!-- Drop zone -->
+        <div class="resume-drop"
+             [class.resume-drop--active]="isDragging()"
+             (dragover)="onDragOver($event)"
+             (dragleave)="isDragging.set(false)"
+             (drop)="onDrop($event)"
+             (click)="resumeFileInput.click()">
+          <i class="pi pi-cloud-upload resume-drop-icon"></i>
+          <p class="resume-drop-title">Drop your resume here</p>
+          <p class="resume-drop-hint">PDF, DOCX · max 5 MB · click to browse</p>
+          <input #resumeFileInput type="file" accept=".pdf,.doc,.docx" (change)="onFileChange($event)" hidden />
+        </div>
+
+        <!-- Parsed resume preview -->
+        @if (parsedResume()) {
+          <div class="parsed-banner">
+            <div class="parsed-banner-icon"><i class="pi pi-sparkles"></i></div>
+            <div class="parsed-banner-content">
+              <p class="parsed-banner-title">Resume parsed!</p>
+              <p class="parsed-banner-desc">Apply this data to auto-fill your profile</p>
+            </div>
+            <button class="btn-primary btn-sm" (click)="applyParsedResume()">Apply</button>
+          </div>
+        }
+      </div>
+
+    </aside>
+
+    <!-- ═══════════════ RIGHT COLUMN ═══════════════ -->
+    <main class="col-right">
+
+      <!-- About / Bio -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">About</span>
+          @if (editingAbout()) {
+            <div class="about-header-actions">
+              <button class="btn-ghost-sm" (click)="editingAbout.set(false)"><i class="pi pi-times"></i> Cancel</button>
+              <button class="btn-ghost-sm btn-ghost-sm--primary" (click)="onSave(); editingAbout.set(false)">
+                <i class="pi pi-save"></i> Save
+              </button>
             </div>
           } @else {
-            <form [formGroup]="profileForm" (ngSubmit)="onSave()" class="profile-form" novalidate>
-              <div class="form-row">
-                <div class="form-field">
-                  <label for="fullName" class="form-label">Full Name</label>
-                  <input id="fullName" type="text" pInputText formControlName="fullName"
-                         class="form-input" placeholder="Your full name" aria-required="true"/>
-                </div>
-                <div class="form-field">
-                  <label for="phone" class="form-label">Phone</label>
-                  <input id="phone" type="tel" pInputText formControlName="phone"
-                         class="form-input" placeholder="+91 00000 00000"/>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-field">
-                  <label for="location" class="form-label">Location</label>
-                  <input id="location" type="text" pInputText formControlName="location"
-                         class="form-input" placeholder="e.g. Bangalore, India"/>
-                </div>
-                <div class="form-field">
-                  <label for="experienceYears" class="form-label">Years of Experience</label>
-                  <input id="experienceYears" type="number" pInputText formControlName="experienceYears"
-                         class="form-input" placeholder="0" min="0"/>
-                </div>
-              </div>
-
-              <div class="form-field">
-                <label for="skills" class="form-label">Skills (press Enter to add)</label>
-                <div class="custom-chips-input" (click)="skillInput.focus()">
-                  @for (skill of profileForm.get('skills')?.value || []; track skill; let i = $index) {
-                    <p-chip [label]="skill" [removable]="true" (onRemove)="removeSkill(i)"></p-chip>
-                  }
-                  <input #skillInput type="text" class="chip-input" placeholder="Add skills..." 
-                         (keydown.enter)="$event.preventDefault(); addSkill(skillInput)"
-                         (keydown.comma)="$event.preventDefault(); addSkill(skillInput)">
-                </div>
-              </div>
-
-              <div class="profile-form__actions">
-                <button type="submit" id="btn-save-profile" class="save-btn"
-                        [disabled]="profileForm.invalid || isSaving()"
-                        aria-label="Save profile changes">
-                  @if (isSaving()) {
-                    <i class="pi pi-spinner pi-spin" aria-hidden="true"></i> Saving...
-                  } @else {
-                    Save Changes
-                  }
-                </button>
-              </div>
-            </form>
+            <button class="btn-ghost-sm" (click)="editingAbout.set(true)">
+              <i class="pi pi-pencil"></i> Edit
+            </button>
           }
-        </section>
+        </div>
 
-        <!-- Resume section -->
-        <section class="profile-card" aria-labelledby="resume-heading">
-          <h2 id="resume-heading" class="profile-card__title">Resume</h2>
-
-          @if (profile()?.resumeUrl) {
-            <div class="resume-current">
-              <div class="resume-current__icon" aria-hidden="true">
-                <i class="pi pi-file-pdf"></i>
-              </div>
-              <div class="resume-current__info">
-                <p class="resume-current__name">resume.pdf</p>
-                <p class="resume-current__status text-success">
-                  <i class="pi pi-check-circle" aria-hidden="true"></i> Uploaded
-                </p>
-              </div>
-            </div>
+        <form [formGroup]="profileForm">
+          @if (editingAbout()) {
+            <textarea pInputTextarea formControlName="about" class="about-textarea"
+                      rows="5" placeholder="Write a short professional summary about yourself…"
+                      autofocus></textarea>
+          } @else {
+            <p class="about-text" (click)="editingAbout.set(true)">
+              {{ profileForm.get('about')?.value || 'Click to add a professional summary…' }}
+            </p>
           }
+        </form>
+      </div>
 
-          <div class="resume-upload" [class.resume-upload--dragging]="isDragging()"
-               (dragover)="onDragOver($event)" (dragleave)="isDragging.set(false)"
-               (drop)="onDrop($event)">
-            <i class="pi pi-upload" aria-hidden="true"></i>
-            <p class="resume-upload__label">Drag & drop your resume here</p>
-            <p class="resume-upload__hint">PDF, DOC, DOCX — max 5MB</p>
-            <label for="resume-file" class="resume-upload__btn" aria-label="Browse for resume file">
-              Browse File
-            </label>
-            <input id="resume-file" type="file" accept=".pdf,.doc,.docx"
-                   (change)="onFileChange($event)" class="resume-upload__input"
-                   aria-label="Upload resume"/>
-          </div>
-
-          @if (parsedResume()) {
-            <div class="parsed-preview" aria-labelledby="parsed-heading">
-              <h3 id="parsed-heading" class="parsed-preview__title">
-                <i class="pi pi-sparkles" aria-hidden="true"></i>
-                Parsed from resume
-              </h3>
-              <p class="parsed-preview__hint">
-                Apply this data to auto-fill your profile?
-              </p>
-              <button class="apply-parsed-btn" (click)="applyParsedResume()"
-                      id="btn-apply-parsed" aria-label="Apply parsed resume data to profile">
-                Apply to Profile
+      <!-- Skills -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Technical Skills</span>
+          <span class="skill-count">{{ (profileForm.get('skills')?.value || []).length }} added</span>
+        </div>
+        <div class="chips-wrap" (click)="skillInput.focus()">
+          @for (skill of profileForm.get('skills')?.value || []; track skill; let i = $index) {
+            <div class="chip">
+              <span>{{ skill }}</span>
+              <button type="button" class="chip-remove" (click)="$event.stopPropagation(); removeSkill(i)">
+                <i class="pi pi-times"></i>
               </button>
             </div>
           }
-        </section>
+          <input #skillInput type="text" class="chip-text-input"
+                 placeholder="Type a skill + Enter"
+                 (keydown.enter)="$event.preventDefault(); addSkill(skillInput)"
+                 (keydown.comma)="$event.preventDefault(); addSkill(skillInput)" />
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Experience</span>
+          <button class="btn-add" (click)="openExperienceDialog()">
+            <i class="pi pi-plus"></i> Add
+          </button>
+        </div>
+
+        @if ((profileForm.value.experience || []).length === 0) {
+          <div class="empty-section">
+            <i class="pi pi-briefcase empty-icon"></i>
+            <p>No experience added yet</p>
+          </div>
+        }
+
+        <div class="timeline">
+          @for (exp of profileForm.value.experience; track exp; let i = $index) {
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-body">
+                <div class="tl-header">
+                  <div>
+                    <h3 class="tl-title">{{ exp.jobDesignation }}</h3>
+                    <p class="tl-sub">{{ exp.companyName }} &nbsp;·&nbsp; <span class="work-type-badge">{{ exp.workType | titlecase }}</span></p>
+                    <p class="tl-date">
+                      <i class="pi pi-calendar"></i>
+                      {{ exp.dateFrom | date:'MMM yyyy' }} – {{ exp.dateTo ? (exp.dateTo | date:'MMM yyyy') : 'Present' }}
+                    </p>
+                  </div>
+                  <div class="tl-actions">
+                    <button class="icon-btn" (click)="openExperienceDialog(i)" title="Edit"><i class="pi pi-pencil"></i></button>
+                    <button class="icon-btn icon-btn--danger" (click)="deleteExperience(i)" title="Delete"><i class="pi pi-trash"></i></button>
+                  </div>
+                </div>
+                @if (exp.summary?.length) {
+                  <ul class="bullet-list">
+                    @for (s of exp.summary; track s) { <li>{{ s }}</li> }
+                  </ul>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Education</span>
+          <button class="btn-add" (click)="openEducationDialog()">
+            <i class="pi pi-plus"></i> Add
+          </button>
+        </div>
+
+        @if ((profileForm.value.education || []).length === 0) {
+          <div class="empty-section">
+            <i class="pi pi-book empty-icon"></i>
+            <p>No education added yet</p>
+          </div>
+        }
+
+        <div class="edu-list">
+          @for (edu of profileForm.value.education; track edu; let i = $index) {
+            <div class="edu-item">
+              <div class="edu-icon-wrap"><i class="pi pi-building"></i></div>
+              <div class="edu-body">
+                <div class="edu-header">
+                  <div>
+                    <h3 class="edu-institution">{{ edu.institution }}</h3>
+                    <p class="edu-degree">{{ edu.degree }}</p>
+                    <p class="edu-dates">{{ edu.dateFrom | date:'yyyy' }} – {{ edu.dateTo ? (edu.dateTo | date:'yyyy') : 'Present' }}</p>
+                  </div>
+                  <div class="tl-actions">
+                    <button class="icon-btn" (click)="openEducationDialog(i)"><i class="pi pi-pencil"></i></button>
+                    <button class="icon-btn icon-btn--danger" (click)="deleteEducation(i)"><i class="pi pi-trash"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Certifications</span>
+          <button class="btn-add" (click)="openCertificationDialog()">
+            <i class="pi pi-plus"></i> Add
+          </button>
+        </div>
+
+        @if ((profileForm.value.certifications || []).length === 0) {
+          <div class="empty-section">
+            <i class="pi pi-verified empty-icon"></i>
+            <p>No certifications added yet</p>
+          </div>
+        }
+
+        <div class="cert-grid">
+          @for (cert of profileForm.value.certifications; track cert; let i = $index) {
+            <div class="cert-card">
+              <div class="cert-card-top">
+                <div class="cert-badge"><i class="pi pi-verified"></i></div>
+                <div class="tl-actions">
+                  <button class="icon-btn" (click)="openCertificationDialog(i)"><i class="pi pi-pencil"></i></button>
+                  <button class="icon-btn icon-btn--danger" (click)="deleteCertification(i)"><i class="pi pi-trash"></i></button>
+                </div>
+              </div>
+              <h4 class="cert-name">{{ cert.name }}</h4>
+              <p class="cert-dates">Issued {{ cert.issuedDate | date:'MMM yyyy' }}
+                @if(cert.expirationDate) { · Expires {{ cert.expirationDate | date:'MMM yyyy' }} }
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     DIALOGS
+     ═══════════════════════════════════════════════════════════ -->
+
+<!-- Experience Dialog -->
+<p-dialog header="Add / Edit Experience" [visible]="showExperienceDialog()"
+          (visibleChange)="showExperienceDialog.set($event)" [modal]="true"
+          [style]="{width: '560px'}" [draggable]="false">
+  <form [formGroup]="experienceForm" class="dlg-form" (ngSubmit)="saveExperience()">
+    <div class="dlg-grid-2">
+      <div class="dlg-field">
+        <label>Job Designation *</label>
+        <input pInputText formControlName="jobDesignation" placeholder="e.g. Senior Developer" class="dlg-input" />
+      </div>
+      <div class="dlg-field">
+        <label>Company Name *</label>
+        <input pInputText formControlName="companyName" placeholder="e.g. Acme Corp" class="dlg-input" />
       </div>
     </div>
+    <div class="dlg-field">
+      <label>Work Type</label>
+      <select formControlName="workType" class="dlg-select">
+        <option value="FULL_TIME">Full-time</option>
+        <option value="PART_TIME">Part-time</option>
+        <option value="CONTRACT">Contract</option>
+        <option value="FREELANCE">Freelance</option>
+      </select>
+    </div>
+    <div class="dlg-grid-2">
+      <div class="dlg-field">
+        <label>Start Date *</label>
+        <input type="date" pInputText formControlName="dateFrom" class="dlg-input" />
+      </div>
+      <div class="dlg-field">
+        <label>End Date <span class="dlg-optional">(leave blank if current)</span></label>
+        <input type="date" pInputText formControlName="dateTo" class="dlg-input"
+               [class.dlg-input--disabled]="isCurrentlyWorking()" />
+      </div>
+    </div>
+    <!-- Currently Working Checkbox -->
+    <div class="currently-working-row">
+      <label class="checkbox-label">
+        <input type="checkbox" class="checkbox-input"
+               [checked]="isCurrentlyWorking()"
+               (change)="toggleCurrentlyWorking($any($event.target).checked)" />
+        <span class="checkbox-custom"></span>
+        <span class="checkbox-text">I currently work here</span>
+      </label>
+    </div>
+    <div class="dlg-field">
+      <label>Summary Bullets</label>
+      <ul class="summary-list">
+        @for (s of experienceForm.value.summary; track s; let i = $index) {
+          <li class="summary-item">
+            <i class="pi pi-minus-circle summary-bullet"></i>
+            <span>{{ s }}</span>
+            <button type="button" class="summary-remove" (click)="removeExperienceSummary(i)"><i class="pi pi-times"></i></button>
+          </li>
+        }
+      </ul>
+      <div class="summary-input-row">
+        <input #summaryInput type="text" pInputText class="dlg-input" placeholder="Add a bullet point…"
+               (keydown.enter)="$event.preventDefault(); addExperienceSummary(summaryInput)" />
+        <button type="button" class="btn-ghost-sm" (click)="addExperienceSummary(summaryInput)"><i class="pi pi-plus"></i></button>
+      </div>
+    </div>
+    <div class="dlg-footer">
+      <button type="button" class="btn-outline" (click)="showExperienceDialog.set(false)">Cancel</button>
+      <button type="submit" class="btn-primary" [disabled]="experienceForm.invalid">Save Experience</button>
+    </div>
+  </form>
+</p-dialog>
+
+<!-- Education Dialog -->
+<p-dialog header="Add / Edit Education" [visible]="showEducationDialog()"
+          (visibleChange)="showEducationDialog.set($event)" [modal]="true"
+          [style]="{width: '500px'}" [draggable]="false">
+  <form [formGroup]="educationForm" class="dlg-form" (ngSubmit)="saveEducation()">
+    <div class="dlg-field">
+      <label>Institution *</label>
+      <input pInputText formControlName="institution" placeholder="e.g. MIT" class="dlg-input" />
+    </div>
+    <div class="dlg-field">
+      <label>Degree / Programme *</label>
+      <input pInputText formControlName="degree" placeholder="e.g. B.Tech Computer Science" class="dlg-input" />
+    </div>
+    <div class="dlg-grid-2">
+      <div class="dlg-field">
+        <label>Start Date *</label>
+        <input type="date" pInputText formControlName="dateFrom" class="dlg-input" />
+      </div>
+      <div class="dlg-field">
+        <label>End Date <span class="dlg-optional">(leave blank if current)</span></label>
+        <input type="date" pInputText formControlName="dateTo" class="dlg-input" />
+      </div>
+    </div>
+    <div class="dlg-footer">
+      <button type="button" class="btn-outline" (click)="showEducationDialog.set(false)">Cancel</button>
+      <button type="submit" class="btn-primary" [disabled]="educationForm.invalid">Save Education</button>
+    </div>
+  </form>
+</p-dialog>
+
+<!-- Certification Dialog -->
+<p-dialog header="Add / Edit Certification" [visible]="showCertificationDialog()"
+          (visibleChange)="showCertificationDialog.set($event)" [modal]="true"
+          [style]="{width: '460px'}" [draggable]="false">
+  <form [formGroup]="certificationForm" class="dlg-form" (ngSubmit)="saveCertification()">
+    <div class="dlg-field">
+      <label>Certification Name *</label>
+      <input pInputText formControlName="name" placeholder="e.g. AWS Solutions Architect" class="dlg-input" />
+    </div>
+    <div class="dlg-grid-2">
+      <div class="dlg-field">
+        <label>Issued Date *</label>
+        <input type="date" pInputText formControlName="issuedDate" class="dlg-input" />
+      </div>
+      <div class="dlg-field">
+        <label>Expiration Date <span class="dlg-optional">(optional)</span></label>
+        <input type="date" pInputText formControlName="expirationDate" class="dlg-input" />
+      </div>
+    </div>
+    <div class="dlg-footer">
+      <button type="button" class="btn-outline" (click)="showCertificationDialog.set(false)">Cancel</button>
+      <button type="submit" class="btn-primary" [disabled]="certificationForm.invalid">Save Certification</button>
+    </div>
+  </form>
+</p-dialog>

@@ -1,3 +1,25 @@
+export interface ExperienceDTO {
+  jobDesignation: string;
+  companyName: string;
+  workType: string;
+  dateFrom: string;
+  dateTo: string;
+  summary: string[];
+}
+
+export interface EducationDTO {
+  institution: string;
+  degree: string;
+  dateFrom: string;
+  dateTo: string;
+}
+
+export interface CertificationDTO {
+  name: string;
+  issuedDate: string;
+  expirationDate: string;
+}
+
 /** Candidate profile response — mirrors backend CandidateProfileResponseDTO */
 export interface CandidateProfileResponseDTO {
   id: string;
@@ -6,6 +28,10 @@ export interface CandidateProfileResponseDTO {
   location: string;
   experienceYears: number;
   skills: string[];
+  about: string;
+  experience: ExperienceDTO[];
+  education: EducationDTO[];
+  certifications: CertificationDTO[];
   resumeUrl: string;
 }
 
@@ -16,6 +42,10 @@ export interface CandidateProfileRequestDTO {
   location: string;
   experienceYears: number;
   skills: string[];
+  about: string;
+  experience: ExperienceDTO[];
+  education: EducationDTO[];
+  certifications: CertificationDTO[];
 }
 
 /** Parsed resume data returned by /candidate/profile/resume and /resume/preview */

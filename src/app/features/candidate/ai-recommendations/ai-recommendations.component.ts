@@ -5,12 +5,13 @@ import { ToastService } from '../../../core/services/toast.service';
 import { RecommendedJobDTO } from '../../../core/models/job.model';
 import { JobCardComponent } from '../../../shared/components/job-card/job-card.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { DecimalPipe } from '@angular/common';
 
 /** AI-recommended jobs page — matches Stitch "AI Recommended Jobs" screen */
 @Component({
   selector: 'app-ai-recommendations',
   standalone: true,
-  imports: [JobCardComponent, EmptyStateComponent],
+  imports: [JobCardComponent, EmptyStateComponent, DecimalPipe],
   templateUrl: './ai-recommendations.component.html',
   styleUrl: './ai-recommendations.component.css'})
 export class AiRecommendationsComponent implements OnInit {

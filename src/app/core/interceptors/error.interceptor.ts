@@ -79,7 +79,7 @@ function handle401(
     catchError((refreshErr) => {
       isRefreshing = false;
       store.dispatch(AuthActions.logout());
-      router.navigate([APP_ROUTES.AUTH.LOGIN]);
+      router.navigateByUrl(APP_ROUTES.AUTH.LOGIN);
       return throwError(() => refreshErr);
     })
   );

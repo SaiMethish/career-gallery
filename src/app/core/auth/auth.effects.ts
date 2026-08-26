@@ -94,7 +94,7 @@ export class AuthEffects {
         switchMap(() => 
           this.authService.logout().pipe(
             catchError(() => of(null)), // Ignore errors on logout
-            tap(() => this.router.navigate(['/', APP_ROUTES.AUTH.LOGIN]))
+            tap(() => this.router.navigateByUrl(APP_ROUTES.AUTH.LOGIN))
           )
         )
       ),
@@ -121,7 +121,7 @@ export class AuthEffects {
         ofType(AuthActions.resetPasswordSuccess),
         tap(() => {
           this.toast.success('Password Reset', 'Your password has been successfully updated.');
-          this.router.navigate(['/', APP_ROUTES.AUTH.LOGIN]);
+          this.router.navigateByUrl(APP_ROUTES.AUTH.LOGIN);
         })
       ),
     { dispatch: false }

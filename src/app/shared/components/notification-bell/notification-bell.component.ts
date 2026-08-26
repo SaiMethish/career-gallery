@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { OverlayModule } from 'primeng/overlay';
 import { ButtonModule } from 'primeng/button';
@@ -10,4 +10,6 @@ import { ButtonModule } from 'primeng/button';
   imports: [RouterLink, OverlayModule, ButtonModule],
   templateUrl: './notification-bell.component.html',
   styleUrl: './notification-bell.component.css'})
-export class NotificationBellComponent {}
+export class NotificationBellComponent {
+  @Input() routeLink: string = '/notifications';
+}

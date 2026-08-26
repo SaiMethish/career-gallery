@@ -22,7 +22,7 @@
           @for (rec of recommendations(); track rec.job.id) {
             <div class="rec-item">
               <div class="rec-item__score" [attr.aria-label]="'Match score: ' + rec.score + ' percent'">
-                <span class="rec-item__score-num">{{ rec.score }}<span class="rec-item__score-pct">%</span></span>
+                <span class="rec-item__score-num">{{ rec.score * 100 | number:'1.3-3' }}<span class="rec-item__score-pct">%</span></span>
                 <span class="rec-item__score-label">Match</span>
               </div>
               <div class="rec-item__card">

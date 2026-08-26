@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AsyncPipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { selectCurrentUser } from '../../core/auth/auth.selectors';
 import * as AuthActions from '../../core/auth/auth.actions';
 import { NotificationBellComponent } from '../../shared/components/notification-bell/notification-bell.component';
@@ -21,11 +21,9 @@ export class RecruiterShellComponent {
   private readonly store = inject(Store);
   readonly currentUser$ = this.store.select(selectCurrentUser);
 
-  userInitial(): string {
-    let email = '';
-    this.currentUser$.pipe(takeUntilDestroyed()).subscribe((u) => { email = u?.email ?? ''; });
-    return email.charAt(0).toUpperCase();
-  }
+  readonly userInitial$ = this.currentUser$.pipe(
+    map((u) => (u?.email ?? '').charAt(0).toUpperCase())
+  );
 
   logout(): void {
     this.store.dispatch(AuthActions.logout());

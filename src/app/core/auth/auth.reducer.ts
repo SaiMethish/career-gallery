@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { AuthState, initialAuthState } from './auth.state';
-import { CurrentUser } from '../models/auth.model';
+import { CurrentUser, Role, AuthProvider } from '../models/auth.model';
 import * as AuthActions from './auth.actions';
 
 function toCurrentUser(response: {
@@ -15,6 +15,31 @@ function toCurrentUser(response: {
     role: response.role,
     authProvider: response.authProvider,
   };
+}
+
+function decodeJwt(token: string): CurrentUser | null {
+  try {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    const payload = JSON.parse(jsonPayload);
+    return {
+      userId: payload.userId || '',
+      email: payload.sub || payload.email || '',
+      role: payload.role || Role.CANDIDATE,
+      authProvider: payload.authProvider || AuthProvider.GOOGLE,
+    };
+  } catch (e) {
+    return null;
+  }
 }
 
 export const authReducer = createReducer(
@@ -77,5 +102,6 @@ export const authReducer = createReducer(
   on(AuthActions.oauthCallback, (state, { accessToken }): AuthState => ({
     ...state,
     accessToken,
+    currentUser: decodeJwt(accessToken),
   }))
 );

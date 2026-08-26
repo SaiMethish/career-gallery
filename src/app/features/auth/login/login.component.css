@@ -127,3 +127,94 @@
 
       a { color: var(--color-primary); font-weight: var(--font-weight-semibold); }
     }
+}
+
+/* ── Role Picker Modal ─────────────────────────────────── */
+.role-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.role-picker-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.role-picker-modal h3 {
+  margin: 0 0 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-align: center;
+}
+
+.role-picker-options {
+  display: flex;
+  gap: 1rem;
+}
+
+.role-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.25rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  font-family: inherit;
+  text-align: center;
+}
+
+.role-option:hover {
+  border-color: #4f46e5;
+  background: #eef2ff;
+  transform: translateY(-2px);
+}
+
+.role-option .role-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.role-option strong {
+  font-size: 0.95rem;
+  color: #1a1a2e;
+}
+
+.role-option span {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.role-picker-note {
+  margin: 1.25rem 0 0;
+  font-size: 0.78rem;
+  color: #9ca3af;
+  text-align: center;
+}

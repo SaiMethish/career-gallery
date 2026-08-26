@@ -29,6 +29,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    
+    // Check if we were redirected back here from a failed OAuth login
+    const errorParam = this.route.snapshot.queryParamMap.get('error');
+    if (errorParam === 'account_not_found') {
+      this.store.dispatch(AuthActions.loginFailure({ 
+        error: { message: 'Account not found. Please create an account first.', status: 401, timestamp: new Date().toISOString() } 
+      }));
+    }
+
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],

@@ -1,4 +1,111 @@
-<div class="notifications fade-in">
-      <h1>Notifications</h1>
-      <p>Notifications feed goes here...</p>
+<div class="notifications-page fade-in">
+  <div class="notifications-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Notifications</h1>
+        <p class="page-subtitle">Stay updated on your talent pipeline and system alerts.</p>
+      </div>
+      <button 
+        *ngIf="unreadCount() > 0"
+        (click)="markAllAsRead()"
+        class="btn-mark-read">
+        Mark all as read
+      </button>
     </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button 
+        (click)="setTab('ALL')"
+        class="tab-btn"
+        [class.tab-btn--active]="activeTab() === 'ALL'">
+        All Notifications
+      </button>
+      <button 
+        (click)="setTab('APPLICATIONS')"
+        class="tab-btn"
+        [class.tab-btn--active]="activeTab() === 'APPLICATIONS'">
+        Applications
+      </button>
+      <button 
+        (click)="setTab('INTERVIEWS')"
+        class="tab-btn"
+        [class.tab-btn--active]="activeTab() === 'INTERVIEWS'">
+        Interviews
+      </button>
+      <button 
+        (click)="setTab('SYSTEM')"
+        class="tab-btn"
+        [class.tab-btn--active]="activeTab() === 'SYSTEM'">
+        System Updates
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="loading-state">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading() && filteredNotifications().length === 0" class="empty-state">
+      <i class="pi pi-bell-slash empty-icon"></i>
+      <h3>No notifications</h3>
+      <p>You're all caught up!</p>
+    </div>
+
+    <!-- Notifications List -->
+    <div *ngIf="!loading() && filteredNotifications().length > 0" class="notification-list">
+      @for (notification of filteredNotifications(); track notification.id) {
+        <div 
+          class="notification-item"
+          [class.notification-item--unread]="!notification.isRead"
+          [class.notification-item--read]="notification.isRead"
+          (click)="!notification.isRead ? markAsRead(notification.id) : null"
+          >
+          
+          <!-- Unread Left Border -->
+          <div *ngIf="!notification.isRead" class="unread-border"></div>
+          
+          <!-- Icon -->
+          <div class="notification-icon-wrapper" [class.is-read]="notification.isRead">
+            <div class="notification-icon" [ngClass]="getIconClassForType(notification.type)">
+              <i [class]="getIconForType(notification.type)"></i>
+            </div>
+          </div>
+          
+          <!-- Content -->
+          <div class="notification-content">
+            <div class="notification-header">
+              <h3 class="notification-title" [class.is-unread]="!notification.isRead">
+                {{ getTitleForType(notification.type) }}
+              </h3>
+              <span class="notification-time" [class.is-unread]="!notification.isRead">
+                {{ notification.createdAt | date:'MMM d, h:mm a' }}
+              </span>
+            </div>
+            <p class="notification-message" [class.is-unread]="!notification.isRead">
+              {{ notification.message }}
+            </p>
+            <div class="notification-meta">
+              <span class="notification-tag" [class.is-unread]="!notification.isRead">
+                {{ getLabelForType(notification.type) }}
+              </span>
+            </div>
+          </div>
+          
+          <!-- Unread Dot -->
+          <div class="unread-dot-wrapper">
+            <div *ngIf="!notification.isRead" class="unread-dot"></div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Load More / End of list -->
+    <div *ngIf="!loading() && filteredNotifications().length > 0" class="end-of-list">
+      <p>End of notifications</p>
+    </div>
+  </div>
+</div>
