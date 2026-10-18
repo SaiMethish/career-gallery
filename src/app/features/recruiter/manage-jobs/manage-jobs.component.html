@@ -1,36 +1,58 @@
-<div class="manage-jobs fade-in">
-      <div class="header">
+<div class="manage-jobs-page fade-in">
+  <div class="manage-jobs-container">
+    <!-- Header & Actions -->
+    <div class="header-section">
+      <div>
         <h1 class="title">Manage Jobs</h1>
-        <a routerLink="/recruiter/jobs/new" class="post-btn">Post a Job</a>
+        <p class="subtitle">Review, edit, and track applicants for your active postings.</p>
       </div>
+      <div class="actions">
+        <a routerLink="/recruiter/jobs/new" class="carbon-btn-primary">
+          <i class="pi pi-plus"></i> Post New Job
+        </a>
+      </div>
+    </div>
 
-      @if (isLoading()) {
-        <p>Loading...</p>
-      } @else if (jobs().length === 0) {
-        <app-empty-state icon="pi-briefcase" title="No jobs yet" />
-      } @else {
-        <table class="table">
+    @if (isLoading()) {
+      <p class="loading-state">Loading...</p>
+    } @else if (jobs().length === 0) {
+      <app-empty-state icon="pi-briefcase" title="No jobs yet" />
+    } @else {
+      <!-- Data Table -->
+      <div class="table-container">
+        <table class="carbon-table">
           <thead>
             <tr>
-              <th>Title</th>
+              <th>Job Title & ID</th>
               <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
+              <th>Posted Date</th>
+              <th class="align-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             @for (job of jobs(); track job.id) {
-              <tr>
-                <td>{{ job.title }}</td>
-                <td><app-status-badge [status]="job.status" /></td>
-                <td>{{ job.createdAt | date }}</td>
+              <tr class="table-row">
                 <td>
-                  <a [routerLink]="['/recruiter/jobs', job.id, 'edit']">Edit</a>
-                  <a [routerLink]="['/recruiter/jobs', job.id, 'applicants']">Applicants</a>
+                  <div class="job-title" [routerLink]="['/recruiter/jobs', job.id, 'applicants']">{{ job.title }}</div>
+                  <div class="job-id">REQ-{{ job.id.substring(0, 8) | uppercase }}</div>
+                </td>
+                <td><app-status-badge [status]="job.status" /></td>
+                <td class="date-cell">{{ job.createdAt | date:'mediumDate' }}</td>
+                <td class="align-right">
+                  <div class="row-actions">
+                    <a [routerLink]="['/recruiter/jobs', job.id, 'applicants']" class="icon-btn" title="View Applicants">
+                      <i class="pi pi-users"></i>
+                    </a>
+                    <a [routerLink]="['/recruiter/jobs', job.id, 'edit']" class="icon-btn" title="Edit Job">
+                      <i class="pi pi-pencil"></i>
+                    </a>
+                  </div>
                 </td>
               </tr>
             }
           </tbody>
         </table>
-      }
-    </div>
+      </div>
+    }
+  </div>
+</div>

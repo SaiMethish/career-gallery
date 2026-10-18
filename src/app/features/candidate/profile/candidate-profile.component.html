@@ -34,10 +34,12 @@
           <i class="pi pi-briefcase"></i>
           {{ profileForm.get('experienceYears')?.value || 0 }} yrs experience
         </p>
-        <p class="identity-location" *ngIf="profileForm.get('location')?.value">
+        @if (profileForm.get('location')?.value) {
+        <p class="identity-location">
           <i class="pi pi-map-marker"></i>
           {{ profileForm.get('location')?.value }}
         </p>
+        }
       </div>
 
       <!-- Contact & Basic Info Card -->

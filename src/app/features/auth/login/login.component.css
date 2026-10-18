@@ -56,7 +56,7 @@
       outline: none;
 
       &:focus { border-bottom-color: var(--color-primary); }
-      &--error { border-bottom-color: var(--color-danger); }
+      &.form-input--error { border-bottom-color: var(--color-danger); }
       &::placeholder { color: var(--color-text-placeholder); }
     }
 
@@ -127,8 +127,6 @@
 
       a { color: var(--color-primary); font-weight: var(--font-weight-semibold); }
     }
-}
-
 /* ── Role Picker Modal ─────────────────────────────────── */
 .role-picker-overlay {
   position: fixed;

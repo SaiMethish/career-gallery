@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
 import { RecruiterService } from '../../../core/services/recruiter.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { JobResponseDTO, JobStatus } from '../../../core/models/job.model';
@@ -10,7 +10,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 @Component({
   selector: 'app-manage-jobs',
   standalone: true,
-  imports: [RouterLink, DatePipe, StatusBadgeComponent, EmptyStateComponent],
+  imports: [RouterLink, DatePipe, UpperCasePipe, StatusBadgeComponent, EmptyStateComponent],
   templateUrl: './manage-jobs.component.html',
   styleUrl: './manage-jobs.component.css'})
 export class ManageJobsComponent implements OnInit {

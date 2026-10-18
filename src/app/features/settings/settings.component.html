@@ -1,4 +1,12 @@
 <div class="settings fade-in">
-      <h1>Settings</h1>
-      <p>Account settings go here...</p>
-    </div>
+  <header class="page-header"><div><h1>Settings</h1><p>Manage your workspace preferences.</p></div><button type="button" (click)="save()">Save changes</button></header>
+  @if (saved()) { <div class="success-banner" role="status">Preferences saved.</div> }
+  <section class="settings-card">
+    <h2>Notifications</h2>
+    <label class="setting-row"><span><strong>Email alerts</strong><small>Receive updates about applications and account activity.</small></span><input type="checkbox" [ngModel]="emailAlerts()" (ngModelChange)="emailAlerts.set($event)" /></label>
+  </section>
+  <section class="settings-card">
+    <h2>Display</h2>
+    <label class="setting-row"><span><strong>Compact tables</strong><small>Show more rows at once in job and applicant lists.</small></span><input type="checkbox" [ngModel]="compactTables()" (ngModelChange)="compactTables.set($event)" /></label>
+  </section>
+</div>

@@ -34,7 +34,7 @@
       color: var(--color-text-primary); height: 40px;
       transition: border-color var(--transition-fast); outline: none;
       &:focus { border-bottom-color: var(--color-primary); }
-      &--error { border-bottom-color: var(--color-danger); }
+      &.form-input--error { border-bottom-color: var(--color-danger); }
       &::placeholder { color: var(--color-text-placeholder); }
     }
 
@@ -53,7 +53,7 @@
 
       &:hover { border-color: #8d8d8d; }
 
-      &--selected {
+      &.role-option--selected {
         border-color: var(--color-primary);
         background: var(--color-primary-subtle);
         i { color: var(--color-primary); }

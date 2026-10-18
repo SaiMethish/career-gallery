@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JobService } from '../../../core/services/job.service';
@@ -17,7 +16,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-job-search',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, JobCardComponent, EmptyStateComponent, SelectModule, InputTextModule, ButtonModule],
+  imports: [ReactiveFormsModule, JobCardComponent, EmptyStateComponent, SelectModule, InputTextModule, ButtonModule],
   templateUrl: './job-search.component.html',
   styleUrl: './job-search.component.css'})
 export class JobSearchComponent implements OnInit {

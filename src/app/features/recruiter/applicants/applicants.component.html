@@ -1,4 +1,26 @@
 <div class="applicants fade-in">
-      <h1>Job Applicants</h1>
-      <p>Applicants list goes here...</p>
+  <header class="page-header">
+    <div>
+      <a routerLink="/recruiter/jobs" class="back-link">← Manage jobs</a>
+      <h1>{{ job()?.title || 'Job Applicants' }}</h1>
+      <p>{{ applicants().length }} applicant{{ applicants().length === 1 ? '' : 's' }} for this posting</p>
     </div>
+  </header>
+  @if (error()) { <div class="error-banner" role="alert">{{ error() }}</div> }
+  @if (loading()) { <p class="loading-state">Loading applicants…</p> }
+  @else if (!applicants().length) { <div class="empty-state"><i class="pi pi-users"></i><h2>No applicants yet</h2><p>Applications will appear here as candidates apply.</p></div> }
+  @else {
+    <div class="table-wrap"><table>
+      <thead><tr><th>Candidate</th><th>Experience</th><th>Skills</th><th>Applied</th><th>Status</th></tr></thead>
+      <tbody>@for (applicant of applicants(); track applicant.id) {
+        <tr>
+          <td><strong>{{ applicant.candidateName }}</strong><span>{{ applicant.candidateEmail }}</span></td>
+          <td>{{ applicant.experienceYears || 0 }} yrs</td>
+          <td><div class="skills">@for (skill of applicant.skills || []; track skill) { <span>{{ skill }}</span> }</div></td>
+          <td>{{ applicant.appliedAt | date:'mediumDate' }}</td>
+          <td><select [value]="applicant.status" (change)="updateStatus(applicant, $any($event.target).value)">@for (status of statuses; track status) { <option [value]="status">{{ status }}</option> }</select></td>
+        </tr>
+      }</tbody>
+    </table></div>
+  }
+</div>

@@ -1,4 +1,14 @@
 <div class="company-profile fade-in">
-      <h1>Company Profile</h1>
-      <p>Company profile form goes here...</p>
+  <header class="page-header"><div><h1>Company Profile</h1><p>Keep your company information current for candidates.</p></div><button class="carbon-btn-primary" type="button" (click)="save()" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save changes' }}</button></header>
+  @if (message()) { <div class="success-banner" role="status">{{ message() }}</div> }
+  @if (error()) { <div class="error-banner" role="alert">{{ error() }}</div> }
+  <form [formGroup]="form" (ngSubmit)="save()" class="profile-form">
+    <div class="form-grid">
+      <label>Company name *<input formControlName="companyName" placeholder="Acme Corporation" /></label>
+      <label>Industry<input formControlName="industry" placeholder="Technology" /></label>
+      <label>Website<input formControlName="companyWebsite" placeholder="https://example.com" /></label>
+      <label>Location<input formControlName="location" placeholder="City, Country" /></label>
     </div>
+    <label>Company description<textarea formControlName="companyDescription" rows="7" placeholder="Tell candidates what makes your company a great place to work."></textarea></label>
+  </form>
+</div>
