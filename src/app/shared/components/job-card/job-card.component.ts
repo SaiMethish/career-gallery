@@ -17,6 +17,7 @@ import { JobResponseDTO, JobStatus, JobType } from '../../../core/models/job.mod
 export class JobCardComponent {
   @Input({ required: true }) job!: JobResponseDTO;
   @Input() saved = false;
+  @Input() isApplied = false;
   @Input() showApplyButton = true;
   @Output() saveToggled = new EventEmitter<string>();
   @Output() applied = new EventEmitter<string>();
@@ -27,7 +28,9 @@ export class JobCardComponent {
   }
 
   onApply(): void {
-    this.applied.emit(this.job.id);
+    if (!this.isApplied) {
+      this.applied.emit(this.job.id);
+    }
   }
 
   formatJobType(type: JobType): string {

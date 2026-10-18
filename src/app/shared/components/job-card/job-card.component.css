@@ -128,9 +128,16 @@
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-semibold);
       cursor: pointer;
-      transition: background var(--transition-fast);
+      transition: background var(--transition-fast), color var(--transition-fast);
       text-transform: uppercase;
       letter-spacing: 0.04em;
 
-      &:hover { background: var(--color-primary-hover); }
+      &:hover:not(:disabled) { background: var(--color-primary-hover); }
+
+      &:disabled,
+      &.job-card__apply-btn--applied {
+        background: #e0e0e0;
+        color: #8d8d8d;
+        cursor: not-allowed;
+      }
     }

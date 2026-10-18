@@ -28,6 +28,7 @@ export class JobSearchComponent implements OnInit {
 
   readonly jobs = signal<JobResponseDTO[]>([]);
   readonly savedJobIds = signal<Set<string>>(new Set());
+  readonly appliedJobIds = signal<Set<string>>(new Set());
   readonly isLoading = signal(true);
   readonly currentPage = signal(0);
   readonly totalElements = signal(0);
@@ -60,10 +61,15 @@ export class JobSearchComponent implements OnInit {
 
     this.loadJobs();
     this.loadSavedJobIds();
+    this.loadAppliedJobIds();
   }
 
   isSaved(jobId: string): boolean {
     return this.savedJobIds().has(jobId);
+  }
+
+  isApplied(jobId: string): boolean {
+    return this.appliedJobIds().has(jobId);
   }
 
   onSaveToggle(jobId: string): void {
@@ -89,8 +95,13 @@ export class JobSearchComponent implements OnInit {
   }
 
   onApply(jobId: string): void {
+    if (this.isApplied(jobId)) return;
+
     this.candidateService.applyToJob(jobId, {}).subscribe({
-      next: () => this.toast.success('Applied!', 'Your application was submitted.'),
+      next: () => {
+        this.toast.success('Applied!', 'Your application was submitted.');
+        this.appliedJobIds.update((set) => new Set([...set, jobId]));
+      },
       error: () => this.toast.error('Error', 'Failed to apply. You may have already applied.'),
     });
   }
@@ -132,6 +143,12 @@ export class JobSearchComponent implements OnInit {
   private loadSavedJobIds(): void {
     this.candidateService.getSavedJobs().subscribe({
       next: (jobs) => this.savedJobIds.set(new Set(jobs.map((j) => j.id))),
+    });
+  }
+
+  private loadAppliedJobIds(): void {
+    this.candidateService.getMyApplications(0, 100).subscribe({
+      next: (page) => this.appliedJobIds.set(new Set((page.content || []).map((app) => app.jobId))),
     });
   }
 }

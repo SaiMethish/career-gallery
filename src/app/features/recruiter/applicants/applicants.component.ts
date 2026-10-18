@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RecruiterService } from '../../../core/services/recruiter.service';
 import { ApplicantResponseDTO, JobApplicationStatus } from '../../../core/models/application.model';
 import { JobResponseDTO } from '../../../core/models/job.model';
@@ -9,7 +10,7 @@ import { JobResponseDTO } from '../../../core/models/job.model';
 @Component({
   selector: 'app-applicants',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, FormsModule],
   templateUrl: './applicants.component.html',
   styleUrl: './applicants.component.css'})
 export class ApplicantsComponent implements OnInit {

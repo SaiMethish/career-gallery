@@ -33,10 +33,12 @@
               @if (job()!.status === JobStatus.OPEN) {
                 <button class="detail-apply-btn" (click)="apply()"
                         [id]="'btn-apply-job-' + job()!.id"
-                        [disabled]="applying()"
-                        aria-label="Apply to this job">
+                        [disabled]="applying() || applied()"
+                        [attr.aria-label]="applied() ? 'Already applied to this job' : 'Apply to this job'">
                   @if (applying()) {
                     <i class="pi pi-spinner pi-spin" aria-hidden="true"></i> Applying...
+                  } @else if (applied()) {
+                    Applied
                   } @else {
                     Apply Now
                   }

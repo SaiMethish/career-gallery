@@ -27,6 +27,7 @@
               </div>
               <div class="rec-item__card">
                 <app-job-card [job]="rec.job" [saved]="false"
+                              [isApplied]="isApplied(rec.job.id)"
                               (saveToggled)="onSave($event)"
                               (applied)="onApply($event)" />
               </div>

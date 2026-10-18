@@ -52,10 +52,12 @@
         <span class="job-card__applicants">{{ job.applicationCount }} applicants</span>
         @if (showApplyButton) {
           <button class="job-card__apply-btn"
+                  [class.job-card__apply-btn--applied]="isApplied"
+                  [disabled]="isApplied"
                   (click)="onApply()"
                   [id]="'btn-apply-job-' + job.id"
-                  [attr.aria-label]="'Apply to ' + job.title">
-            Apply Now
+                  [attr.aria-label]="isApplied ? 'Already applied to ' + job.title : 'Apply to ' + job.title">
+            {{ isApplied ? 'Applied' : 'Apply Now' }}
           </button>
         }
       </div>

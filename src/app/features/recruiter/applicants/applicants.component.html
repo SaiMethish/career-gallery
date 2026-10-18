@@ -18,7 +18,13 @@
           <td>{{ applicant.experienceYears || 0 }} yrs</td>
           <td><div class="skills">@for (skill of applicant.skills || []; track skill) { <span>{{ skill }}</span> }</div></td>
           <td>{{ applicant.appliedAt | date:'mediumDate' }}</td>
-          <td><select [value]="applicant.status" (change)="updateStatus(applicant, $any($event.target).value)">@for (status of statuses; track status) { <option [value]="status">{{ status }}</option> }</select></td>
+          <td>
+            <select [ngModel]="applicant.status" (ngModelChange)="updateStatus(applicant, $event)">
+              @for (status of statuses; track status) {
+                <option [value]="status" [selected]="status === applicant.status">{{ status }}</option>
+              }
+            </select>
+          </td>
         </tr>
       }</tbody>
     </table></div>

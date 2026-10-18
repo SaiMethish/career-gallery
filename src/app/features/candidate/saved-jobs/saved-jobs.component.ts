@@ -17,13 +17,33 @@ export class SavedJobsComponent implements OnInit {
   private readonly toast = inject(ToastService);
 
   readonly jobs = signal<JobResponseDTO[]>([]);
+  readonly appliedJobIds = signal<Set<string>>(new Set<string>());
   readonly isLoading = signal(true);
 
   ngOnInit(): void {
+    this.loadSavedJobs();
+    this.loadAppliedJobs();
+  }
+
+  loadSavedJobs(): void {
     this.candidateService.getSavedJobs().subscribe({
       next: (j) => { this.jobs.set(j); this.isLoading.set(false); },
       error: () => this.isLoading.set(false),
     });
+  }
+
+  loadAppliedJobs(): void {
+    this.candidateService.getMyApplications(0, 100).subscribe({
+      next: (page) => {
+        const ids = new Set((page.content || []).map((app) => app.jobId));
+        this.appliedJobIds.set(ids);
+      },
+      error: () => {},
+    });
+  }
+
+  isApplied(jobId: string): boolean {
+    return this.appliedJobIds().has(jobId);
   }
 
   onUnsave(jobId: string): void {
@@ -37,8 +57,13 @@ export class SavedJobsComponent implements OnInit {
   }
 
   onApply(jobId: string): void {
+    if (this.isApplied(jobId)) return;
+
     this.candidateService.applyToJob(jobId, {}).subscribe({
-      next: () => this.toast.success('Applied!', 'Your application was submitted.'),
+      next: () => {
+        this.toast.success('Applied!', 'Your application was submitted.');
+        this.appliedJobIds.update((set) => new Set([...set, jobId]));
+      },
       error: () => this.toast.error('Error', 'Failed to apply.'),
     });
   }

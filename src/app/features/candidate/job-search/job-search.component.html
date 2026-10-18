@@ -70,6 +70,7 @@
             <div class="jobs-list">
               @for (job of jobs(); track job.id) {
                 <app-job-card [job]="job" [saved]="isSaved(job.id)"
+                              [isApplied]="isApplied(job.id)"
                               (saveToggled)="onSaveToggle($event)"
                               (applied)="onApply($event)" />
               }

@@ -20,6 +20,7 @@ export class AiRecommendationsComponent implements OnInit {
   private readonly toast = inject(ToastService);
 
   readonly recommendations = signal<RecommendedJobDTO[]>([]);
+  readonly appliedJobIds = signal<Set<string>>(new Set<string>());
   readonly isLoading = signal(true);
 
   ngOnInit(): void {
@@ -27,6 +28,14 @@ export class AiRecommendationsComponent implements OnInit {
       next: (recs) => { this.recommendations.set(recs); this.isLoading.set(false); },
       error: () => this.isLoading.set(false),
     });
+
+    this.candidateService.getMyApplications(0, 100).subscribe({
+      next: (page) => this.appliedJobIds.set(new Set((page.content || []).map((app) => app.jobId))),
+    });
+  }
+
+  isApplied(jobId: string): boolean {
+    return this.appliedJobIds().has(jobId);
   }
 
   onSave(jobId: string): void {
@@ -36,8 +45,13 @@ export class AiRecommendationsComponent implements OnInit {
   }
 
   onApply(jobId: string): void {
+    if (this.isApplied(jobId)) return;
+
     this.candidateService.applyToJob(jobId, {}).subscribe({
-      next: () => this.toast.success('Applied!', 'Your application was submitted.'),
+      next: () => {
+        this.toast.success('Applied!', 'Your application was submitted.');
+        this.appliedJobIds.update((set) => new Set([...set, jobId]));
+      },
       error: () => this.toast.error('Error', 'Failed to apply.'),
     });
   }
