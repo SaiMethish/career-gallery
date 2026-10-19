@@ -1,32 +1,232 @@
-<div class="applicants fade-in">
-  <header class="page-header">
-    <div>
-      <a routerLink="/recruiter/jobs" class="back-link">← Manage jobs</a>
-      <h1>{{ job()?.title || 'Job Applicants' }}</h1>
-      <p>{{ applicants().length }} applicant{{ applicants().length === 1 ? '' : 's' }} for this posting</p>
+<div class="applicants-page fade-in">
+  <!-- Top Navigation & Header -->
+  <header class="applicants-header">
+    <div class="header-breadcrumbs">
+      <a routerLink="/recruiter/jobs" class="back-link">
+        <i class="pi pi-arrow-left"></i> Manage jobs
+      </a>
+      <div class="title-row">
+        <div>
+          <h1 class="job-title">{{ job()?.title || 'Job Applicants' }}</h1>
+          <p class="job-subtitle">
+            <span class="mono">{{ job()?.id }}</span> · {{ applicants().length }} total applicants
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Filter Tabs -->
+    <div class="filter-tabs" role="tablist">
+      @for (tab of tabs; track tab) {
+        <button
+          type="button"
+          class="tab-btn"
+          [class.tab-btn--active]="selectedTab() === tab"
+          (click)="selectedTab.set(tab)">
+          {{ tab }}
+          <span class="tab-badge">{{ getCountForTab(tab) }}</span>
+        </button>
+      }
     </div>
   </header>
-  @if (error()) { <div class="error-banner" role="alert">{{ error() }}</div> }
-  @if (loading()) { <p class="loading-state">Loading applicants…</p> }
-  @else if (!applicants().length) { <div class="empty-state"><i class="pi pi-users"></i><h2>No applicants yet</h2><p>Applications will appear here as candidates apply.</p></div> }
-  @else {
-    <div class="table-wrap"><table>
-      <thead><tr><th>Candidate</th><th>Experience</th><th>Skills</th><th>Applied</th><th>Status</th></tr></thead>
-      <tbody>@for (applicant of applicants(); track applicant.id) {
-        <tr>
-          <td><strong>{{ applicant.candidateName }}</strong><span>{{ applicant.candidateEmail }}</span></td>
-          <td>{{ applicant.experienceYears || 0 }} yrs</td>
-          <td><div class="skills">@for (skill of applicant.skills || []; track skill) { <span>{{ skill }}</span> }</div></td>
-          <td>{{ applicant.appliedAt | date:'mediumDate' }}</td>
-          <td>
-            <select [ngModel]="applicant.status" (ngModelChange)="updateStatus(applicant, $event)">
-              @for (status of statuses; track status) {
-                <option [value]="status" [selected]="status === applicant.status">{{ status }}</option>
+
+  @if (error()) {
+    <div class="error-banner" role="alert">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state">
+      <i class="pi pi-spin pi-spinner"></i>
+      <p>Loading applicants console…</p>
+    </div>
+  } @else if (applicants().length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-users empty-icon"></i>
+      <h2>No applicants yet</h2>
+      <p>Applications will appear here as candidates apply to this posting.</p>
+    </div>
+  } @else {
+    <!-- Master-Detail Workspace -->
+    <div class="applicants-workspace">
+      <!-- Left Pane: Candidates List -->
+      <aside class="candidates-sidebar">
+        <!-- Search filter -->
+        <div class="search-box">
+          <i class="pi pi-search search-icon"></i>
+          <input
+            type="text"
+            placeholder="Filter candidates..."
+            [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event)"
+            class="search-input" />
+        </div>
+
+        <div class="candidates-list">
+          @if (filteredApplicants().length === 0) {
+            <div class="no-filter-match">No candidates match current filter.</div>
+          } @else {
+            @for (cand of filteredApplicants(); track cand.id) {
+              <div
+                class="candidate-card"
+                [class.candidate-card--selected]="selectedApplicant()?.id === cand.id"
+                (click)="selectApplicant(cand)">
+                <div class="card-top">
+                  <div class="candidate-avatar">
+                    {{ getInitials(cand.candidateName, cand.candidateEmail) }}
+                  </div>
+                  <div class="candidate-meta">
+                    <h4 class="candidate-name">{{ cand.candidateName || 'Candidate' }}</h4>
+                    <p class="candidate-applied">{{ cand.appliedAt | date:'mediumDate' }}</p>
+                  </div>
+                  <div class="match-badge">
+                    {{ calculateMatchScore(cand) }}%
+                  </div>
+                </div>
+
+                <div class="card-bottom">
+                  <span class="status-indicator status-{{ cand.status.toLowerCase() }}">
+                    <span class="status-dot"></span> {{ cand.status }}
+                  </span>
+                  <span class="cand-exp">{{ cand.experienceYears || 0 }} yrs</span>
+                </div>
+
+                @if (cand.skills && cand.skills.length > 0) {
+                  <div class="cand-skills-preview">
+                    @for (skill of cand.skills.slice(0, 3); track skill) {
+                      <span class="mini-skill">{{ skill }}</span>
+                    }
+                    @if (cand.skills.length > 3) {
+                      <span class="mini-skill-more">+{{ cand.skills.length - 3 }}</span>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          }
+        </div>
+      </aside>
+
+      <!-- Right Pane: Candidate Details Canvas -->
+      <main class="candidate-details-pane">
+        @if (selectedApplicant(); as cand) {
+          <!-- Action Bar -->
+          <div class="detail-action-bar">
+            <div class="cand-identity">
+              <div class="cand-identity-avatar">
+                {{ getInitials(cand.candidateName, cand.candidateEmail) }}
+              </div>
+              <div>
+                <h2 class="cand-identity-name">{{ cand.candidateName || 'Candidate Profile' }}</h2>
+                <div class="cand-identity-sub">
+                  <span><i class="pi pi-envelope"></i> {{ cand.candidateEmail }}</span>
+                  <span class="dot-sep">•</span>
+                  <span><i class="pi pi-briefcase"></i> {{ cand.experienceYears || 0 }} Years Experience</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cand-actions">
+              <div class="status-select-wrap">
+                <label class="status-label">Stage:</label>
+                <select
+                  class="carbon-select"
+                  [ngModel]="cand.status"
+                  (ngModelChange)="updateStatus(cand, $event)">
+                  @for (status of statuses; track status) {
+                    <option [value]="status" [selected]="status === cand.status">{{ status }}</option>
+                  }
+                </select>
+              </div>
+
+              @if (cand.resumeUrl) {
+                <a
+                  [href]="getResumeDownloadUrl(cand.resumeUrl)"
+                  target="_blank"
+                  class="btn-resume-download"
+                  title="Download / View candidate's uploaded resume document">
+                  <i class="pi pi-file-pdf"></i> Download Resume
+                </a>
               }
-            </select>
-          </td>
-        </tr>
-      }</tbody>
-    </table></div>
+            </div>
+          </div>
+
+          <!-- Canvas Cards Grid -->
+          <div class="detail-canvas">
+            <div class="canvas-grid">
+              <!-- AI Assessment / Score -->
+              <section class="carbon-card">
+                <div class="card-heading">
+                  <i class="pi pi-sparkles primary-icon"></i>
+                  <h3>Candidate Evaluation</h3>
+                </div>
+                <div class="eval-stat-row">
+                  <div class="eval-score-box">
+                    <span class="eval-score-num">{{ calculateMatchScore(cand) }}%</span>
+                    <span class="eval-score-label">Role Match</span>
+                  </div>
+                  <div class="eval-text">
+                    <p class="eval-summary">
+                      Profile matches required qualifications for <strong>{{ job()?.title }}</strong> based on experience ({{ cand.experienceYears || 0 }} years) and key technical competencies.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Technical Skills -->
+              <section class="carbon-card">
+                <div class="card-heading">
+                  <i class="pi pi-code primary-icon"></i>
+                  <h3>Skills & Competencies</h3>
+                </div>
+                @if (cand.skills && cand.skills.length > 0) {
+                  <div class="skills-wrap">
+                    @for (skill of cand.skills; track skill) {
+                      <span class="skill-tag">{{ skill }}</span>
+                    }
+                  </div>
+                } @else {
+                  <p class="empty-hint">No skills listed in profile.</p>
+                }
+              </section>
+
+              <!-- Application Details -->
+              <section class="carbon-card">
+                <div class="card-heading">
+                  <i class="pi pi-info-circle primary-icon"></i>
+                  <h3>Application Metadata</h3>
+                </div>
+                <dl class="meta-dl">
+                  <div class="meta-row">
+                    <dt>Application ID</dt>
+                    <dd class="mono">{{ cand.id }}</dd>
+                  </div>
+                  <div class="meta-row">
+                    <dt>Submitted Date</dt>
+                    <dd>{{ cand.appliedAt | date:'medium' }}</dd>
+                  </div>
+                  <div class="meta-row">
+                    <dt>Candidate ID</dt>
+                    <dd class="mono">{{ cand.candidateProfileId }}</dd>
+                  </div>
+                  <div class="meta-row">
+                    <dt>Current Stage</dt>
+                    <dd>
+                      <span class="status-indicator status-{{ cand.status.toLowerCase() }}">
+                        {{ cand.status }}
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+            </div>
+          </div>
+        } @else {
+          <div class="select-prompt">
+            <i class="pi pi-arrow-left"></i>
+            <p>Select an applicant from the left to view details</p>
+          </div>
+        }
+      </main>
+    </div>
   }
 </div>

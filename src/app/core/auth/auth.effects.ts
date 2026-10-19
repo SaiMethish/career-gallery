@@ -91,7 +91,7 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.logout),
-        switchMap(() => 
+        switchMap(() =>
           this.authService.logout().pipe(
             catchError(() => of(null)), // Ignore errors on logout
             tap(() => this.router.navigateByUrl(APP_ROUTES.AUTH.LOGIN))
@@ -130,6 +130,8 @@ export class AuthEffects {
   /** Determine role-specific dashboard route */
   private getDashboardRoute(role: Role): string {
     switch (role) {
+      case Role.ADMIN:
+        return APP_ROUTES.ADMIN.DASHBOARD;
       case Role.RECRUITER:
         return `/${APP_ROUTES.RECRUITER.DASHBOARD}`;
       case Role.CANDIDATE:

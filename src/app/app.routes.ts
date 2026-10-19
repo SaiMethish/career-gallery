@@ -86,6 +86,14 @@ export const routes: Routes = [
         title: 'Job Details — Carbon Talent',
       },
       {
+        path: 'companies/:id',
+        loadComponent: () =>
+          import('./features/candidate/company-detail/company-detail.component').then(
+            (m) => m.CompanyDetailComponent
+          ),
+        title: 'Company Profile — Carbon Talent',
+      },
+      {
         path: 'applications',
         loadComponent: () =>
           import('./features/candidate/applications/my-applications.component').then(
@@ -206,6 +214,52 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
         title: 'Settings — Carbon Talent',
+      },
+    ],
+  },
+
+  // ── Admin Routes ───────────────────────────────────────────
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./layout/admin-shell/admin-shell.component').then(
+        (m) => m.AdminShellComponent
+      ),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [Role.ADMIN] },
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/admin/dashboard/admin-dashboard.component').then(
+            (m) => m.AdminDashboardComponent
+          ),
+        title: 'Admin Overview — Carbon Talent',
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/admin/users/admin-users.component').then(
+            (m) => m.AdminUsersComponent
+          ),
+        title: 'User Directory — Carbon Talent',
+      },
+      {
+        path: 'jobs',
+        loadComponent: () =>
+          import('./features/admin/jobs/admin-jobs.component').then(
+            (m) => m.AdminJobsComponent
+          ),
+        title: 'Job Moderation — Carbon Talent',
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/settings.component').then(
+            (m) => m.SettingsComponent
+          ),
+        title: 'Security Settings — Carbon Talent',
       },
     ],
   },

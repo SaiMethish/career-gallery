@@ -1,0 +1,149 @@
+<div class="company-detail-page fade-in">
+  <!-- Back navigation -->
+  <div class="page-nav">
+    <a routerLink="/candidate/jobs" class="back-link" id="btn-back-to-jobs">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i> Back to jobs
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+      <span>Loading company details...</span>
+    </div>
+  } @else if (error() || !company()) {
+    <app-empty-state
+      icon="pi-building"
+      title="Company Not Found"
+      [message]="error() || 'The requested company profile could not be found or has been disabled.'">
+      <a routerLink="/candidate/jobs" class="carbon-btn-primary">Browse Jobs</a>
+    </app-empty-state>
+  } @else {
+    <!-- Company Hero Banner -->
+    <header class="company-banner">
+      <div class="company-banner__main">
+        <div class="company-banner__avatar" aria-hidden="true">
+          {{ initials }}
+        </div>
+        <div class="company-banner__meta">
+          <div class="company-banner__tagline">
+            <span class="verified-tag">
+              <i class="pi pi-verified" aria-hidden="true"></i> Verified Employer
+            </span>
+            @if (company()!.industry) {
+              <span class="industry-tag">{{ company()!.industry }}</span>
+            }
+          </div>
+          <h1 class="company-banner__name">{{ company()!.companyName }}</h1>
+          <div class="company-banner__quick-info">
+            @if (company()!.location) {
+              <span><i class="pi pi-map-marker" aria-hidden="true"></i> {{ company()!.location }}</span>
+            }
+            <span><i class="pi pi-briefcase" aria-hidden="true"></i> {{ company()!.openJobs.length }} open positions</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="company-banner__actions">
+        @if (company()!.companyWebsite) {
+          <a [href]="company()!.companyWebsite" target="_blank" rel="noopener noreferrer" class="carbon-btn-ghost"
+             id="btn-visit-company-website">
+            <i class="pi pi-globe" aria-hidden="true"></i> Visit Website
+          </a>
+        }
+      </div>
+    </header>
+
+    <!-- Main Grid Layout -->
+    <div class="company-content-layout">
+      <!-- Main Content -->
+      <main class="company-content-main">
+        <!-- About Section -->
+        @if (company()!.companyDescription) {
+          <section class="content-card">
+            <h2 class="content-card__title">
+              <i class="pi pi-info-circle" aria-hidden="true"></i>
+              About {{ company()!.companyName }}
+            </h2>
+            <div class="company-description">
+              <p>{{ company()!.companyDescription }}</p>
+            </div>
+          </section>
+        }
+
+        <!-- Open Positions Section -->
+        <section class="content-card">
+          <div class="positions-header">
+            <h2 class="content-card__title">
+              <i class="pi pi-briefcase" aria-hidden="true"></i>
+              Open Positions ({{ company()!.openJobs.length }})
+            </h2>
+            <span class="positions-hint">All listings are verified and actively hiring</span>
+          </div>
+
+          @if (company()!.openJobs.length === 0) {
+            <app-empty-state
+              icon="pi-inbox"
+              title="No Open Positions Right Now"
+              message="This company currently has no active job postings. Check back later or explore other companies.">
+              <a routerLink="/candidate/jobs" class="carbon-btn-ghost">Browse Other Jobs</a>
+            </app-empty-state>
+          } @else {
+            <div class="jobs-list">
+              @for (job of company()!.openJobs; track job.id) {
+                <app-job-card
+                  [job]="job"
+                  [saved]="isSaved(job.id)"
+                  [isApplied]="isApplied(job.id)"
+                  (saveToggled)="onSaveToggle($event)"
+                  (applied)="onApply($event)">
+                </app-job-card>
+              }
+            </div>
+          }
+        </section>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="company-content-sidebar">
+        <div class="overview-card">
+          <h3 class="overview-card__title">Company Overview</h3>
+          <dl class="meta-list">
+            <div class="meta-item">
+              <dt class="meta-label"><i class="pi pi-tag" aria-hidden="true"></i> Industry</dt>
+              <dd class="meta-value">{{ company()!.industry || 'Technology' }}</dd>
+            </div>
+            <div class="meta-item">
+              <dt class="meta-label"><i class="pi pi-map-marker" aria-hidden="true"></i> Headquarters</dt>
+              <dd class="meta-value">{{ company()!.location || 'Not specified' }}</dd>
+            </div>
+            <div class="meta-item">
+              <dt class="meta-label"><i class="pi pi-globe" aria-hidden="true"></i> Official Web</dt>
+              <dd class="meta-value">
+                @if (company()!.companyWebsite) {
+                  <a [href]="company()!.companyWebsite" target="_blank" rel="noopener noreferrer" class="meta-link">
+                    {{ company()!.companyWebsite }}
+                  </a>
+                } @else {
+                  Not specified
+                }
+              </dd>
+            </div>
+            <div class="meta-item">
+              <dt class="meta-label"><i class="pi pi-calendar" aria-hidden="true"></i> Member Since</dt>
+              <dd class="meta-value">{{ (company()!.createdAt | date:'mediumDate') || '2024' }}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="tip-card">
+          <i class="pi pi-shield" aria-hidden="true"></i>
+          <div>
+            <h4>Verified Employer</h4>
+            <p>Direct communication and fast application turnaround guaranteed by Carbon Talent.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+</div>

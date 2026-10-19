@@ -1,14 +1,187 @@
-<div class="company-profile fade-in">
-  <header class="page-header"><div><h1>Company Profile</h1><p>Keep your company information current for candidates.</p></div><button class="carbon-btn-primary" type="button" (click)="save()" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save changes' }}</button></header>
-  @if (message()) { <div class="success-banner" role="status">{{ message() }}</div> }
-  @if (error()) { <div class="error-banner" role="alert">{{ error() }}</div> }
-  <form [formGroup]="form" (ngSubmit)="save()" class="profile-form">
-    <div class="form-grid">
-      <label>Company name *<input formControlName="companyName" placeholder="Acme Corporation" /></label>
-      <label>Industry<input formControlName="industry" placeholder="Technology" /></label>
-      <label>Website<input formControlName="companyWebsite" placeholder="https://example.com" /></label>
-      <label>Location<input formControlName="location" placeholder="City, Country" /></label>
+<div class="company-profile-page fade-in">
+  @if (loading()) {
+    <div class="loading-state">
+      <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+      <span>Loading company details...</span>
     </div>
-    <label>Company description<textarea formControlName="companyDescription" rows="7" placeholder="Tell candidates what makes your company a great place to work."></textarea></label>
-  </form>
+  } @else {
+    <!-- Hero Branding Header -->
+    <header class="company-hero">
+      <div class="company-hero__content">
+        <div class="company-avatar" aria-hidden="true">
+          {{ initials }}
+        </div>
+        <div class="company-hero__meta">
+          <div class="company-hero__badge-row">
+            <span class="company-hero__badge">
+              <i class="pi pi-verified" aria-hidden="true"></i> Verified Employer
+            </span>
+            @if (profile()?.location) {
+              <span class="company-hero__location">
+                <i class="pi pi-map-marker" aria-hidden="true"></i> {{ profile()?.location }}
+              </span>
+            }
+          </div>
+          <h1 class="company-hero__title">{{ form.get('companyName')?.value || 'Your Company' }}</h1>
+          <p class="company-hero__subtitle">
+            Configure your employer branding profile visible to job candidates and applicants.
+          </p>
+        </div>
+      </div>
+
+      <div class="company-hero__actions">
+        @if (profile()?.id) {
+          <a [routerLink]="['/candidate/companies', profile()!.id]" target="_blank" class="carbon-btn-ghost"
+             id="btn-preview-company-profile">
+            <i class="pi pi-external-link" aria-hidden="true"></i>
+            View Public Profile
+          </a>
+        }
+        <button type="button" class="carbon-btn-primary" (click)="save()" [disabled]="saving()"
+                id="btn-save-company-profile">
+          @if (saving()) {
+            <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+            Saving...
+          } @else {
+            <i class="pi pi-check" aria-hidden="true"></i>
+            Save Changes
+          }
+        </button>
+      </div>
+    </header>
+
+    <div class="company-layout">
+      <!-- Main Form Column -->
+      <main class="company-main">
+        <form [formGroup]="form" (ngSubmit)="save()" class="company-form">
+          <!-- Section 1: General Info -->
+          <section class="form-card">
+            <div class="form-card__header">
+              <h2 class="form-card__title">
+                <i class="pi pi-building" aria-hidden="true"></i>
+                General Information
+              </h2>
+              <p class="form-card__description">Basic organizational identity and primary contact details.</p>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="companyName" class="carbon-label">Company Legal Name *</label>
+                <input id="companyName" formControlName="companyName" type="text" class="carbon-input"
+                       placeholder="e.g. Acme Technologies Inc." />
+                @if (form.get('companyName')?.touched && form.get('companyName')?.invalid) {
+                  <span class="form-error">Company name is required.</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="industry" class="carbon-label">Industry Domain</label>
+                <input id="industry" formControlName="industry" type="text" class="carbon-input"
+                       placeholder="e.g. Enterprise Software, FinTech, AI" />
+              </div>
+
+              <div class="form-group">
+                <label for="location" class="carbon-label">Headquarters / Primary Location</label>
+                <input id="location" formControlName="location" type="text" class="carbon-input"
+                       placeholder="e.g. San Francisco, CA / Remote" />
+              </div>
+
+              <div class="form-group">
+                <label for="companyWebsite" class="carbon-label">Official Website URL</label>
+                <div class="input-with-icon">
+                  <i class="pi pi-globe" aria-hidden="true"></i>
+                  <input id="companyWebsite" formControlName="companyWebsite" type="url" class="carbon-input"
+                         placeholder="https://example.com" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 2: About & Culture -->
+          <section class="form-card">
+            <div class="form-card__header">
+              <h2 class="form-card__title">
+                <i class="pi pi-align-left" aria-hidden="true"></i>
+                About the Company & Culture
+              </h2>
+              <p class="form-card__description">Explain your mission, culture, and what makes working here rewarding for candidates.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="companyDescription" class="carbon-label">Overview & Mission Statement</label>
+              <textarea id="companyDescription" formControlName="companyDescription" rows="8" class="carbon-textarea"
+                        placeholder="Describe what your organization builds, work culture, engineering values, and benefits..."></textarea>
+              <div class="textarea-hint">
+                <span>Markdown & plain text supported</span>
+                <span>{{ form.get('companyDescription')?.value?.length || 0 }} / 3000 chars</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Action Bar -->
+          <div class="form-actions">
+            <button type="button" class="carbon-btn-ghost" (click)="reset()" [disabled]="saving() || form.pristine">
+              Discard Changes
+            </button>
+            <button type="submit" class="carbon-btn-primary" [disabled]="saving()">
+              @if (saving()) {
+                <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+                Saving...
+              } @else {
+                <i class="pi pi-check" aria-hidden="true"></i>
+                Save Changes
+              }
+            </button>
+          </div>
+        </form>
+      </main>
+
+      <!-- Sidebar Column -->
+      <aside class="company-sidebar">
+        <!-- Live Snapshot Card -->
+        <div class="sidebar-card">
+          <h3 class="sidebar-card__title">Profile Health</h3>
+          <div class="snapshot-preview">
+            <div class="snapshot-avatar">{{ initials }}</div>
+            <div class="snapshot-info">
+              <span class="snapshot-name">{{ form.get('companyName')?.value || 'Unnamed Entity' }}</span>
+              <span class="snapshot-industry">{{ form.get('industry')?.value || 'Industry not set' }}</span>
+            </div>
+          </div>
+
+          <div class="status-list">
+            <div class="status-item">
+              <span class="status-label">Verification</span>
+              <span class="status-val status-val--verified">
+                <i class="pi pi-check-circle" aria-hidden="true"></i> Active
+              </span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Public Access</span>
+              <span class="status-val status-val--public">
+                <i class="pi pi-eye" aria-hidden="true"></i> Visible
+              </span>
+            </div>
+            @if (profile()?.updatedAt) {
+              <div class="status-item">
+                <span class="status-label">Last Updated</span>
+                <span class="status-val">{{ profile()?.updatedAt | date:'mediumDate' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Candidate Preview Card -->
+        <div class="sidebar-card sidebar-card--tip">
+          <div class="tip-icon">
+            <i class="pi pi-info-circle" aria-hidden="true"></i>
+          </div>
+          <div class="tip-content">
+            <h4>Attract Top Talent</h4>
+            <p>Profiles with a complete description and headquarters location receive up to <strong>40% more candidate applications</strong>.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
 </div>

@@ -10,7 +10,13 @@
               {{ job.title }}
             </a>
           </h3>
-          <p class="job-card__company">{{ job.companyName }}</p>
+          <p class="job-card__company">
+            @if (job.recruiterProfileId) {
+              <a [routerLink]="['/candidate/companies', job.recruiterProfileId]" class="job-card__company-link">{{ job.companyName }}</a>
+            } @else {
+              {{ job.companyName }}
+            }
+          </p>
         </div>
         <button class="job-card__save-btn" [class.job-card__save-btn--saved]="saved"
                 (click)="onSaveToggle($event)"

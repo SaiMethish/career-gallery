@@ -1,12 +1,178 @@
-<div class="settings fade-in">
-  <header class="page-header"><div><h1>Settings</h1><p>Manage your workspace preferences.</p></div><button type="button" (click)="save()">Save changes</button></header>
-  @if (saved()) { <div class="success-banner" role="status">Preferences saved.</div> }
-  <section class="settings-card">
-    <h2>Notifications</h2>
-    <label class="setting-row"><span><strong>Email alerts</strong><small>Receive updates about applications and account activity.</small></span><input type="checkbox" [ngModel]="emailAlerts()" (ngModelChange)="emailAlerts.set($event)" /></label>
-  </section>
-  <section class="settings-card">
-    <h2>Display</h2>
-    <label class="setting-row"><span><strong>Compact tables</strong><small>Show more rows at once in job and applicant lists.</small></span><input type="checkbox" [ngModel]="compactTables()" (ngModelChange)="compactTables.set($event)" /></label>
-  </section>
+<div class="settings-page fade-in">
+  <div class="settings-container">
+    <!-- Page Header -->
+    <header class="settings-header">
+      <h1 class="settings-title">Settings</h1>
+      <p class="settings-subtitle">
+        Manage your profile configurations, security credentials, and system preferences.
+      </p>
+    </header>
+
+    <!-- Bento Grid Layout -->
+    <div class="settings-grid">
+      <!-- Left Column: Security & Profile -->
+      <div class="col-main">
+        <!-- Account Security -->
+        <section class="carbon-card">
+          <div class="card-heading">
+            <i class="pi pi-shield card-icon"></i>
+            <h2>Account Security</h2>
+          </div>
+
+          @if (passwordError()) {
+            <div class="error-banner" role="alert">{{ passwordError() }}</div>
+          }
+
+          <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="security-form">
+            <div class="form-group">
+              <label class="carbon-label" for="current-pwd">Current Password</label>
+              <input
+                id="current-pwd"
+                type="password"
+                formControlName="currentPassword"
+                class="carbon-input"
+                placeholder="••••••••" />
+              @if (passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid) {
+                <span class="field-error">Current password is required</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label class="carbon-label" for="new-pwd">New Password</label>
+              <input
+                id="new-pwd"
+                type="password"
+                formControlName="newPassword"
+                class="carbon-input"
+                placeholder="••••••••" />
+              <p class="field-hint">Must be at least 6 characters.</p>
+              @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid) {
+                <span class="field-error">Password must be at least 6 characters</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label class="carbon-label" for="confirm-pwd">Confirm New Password</label>
+              <input
+                id="confirm-pwd"
+                type="password"
+                formControlName="confirmPassword"
+                class="carbon-input"
+                placeholder="••••••••" />
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="carbon-btn-primary"
+                [disabled]="updatingPassword()">
+                @if (updatingPassword()) {
+                  <i class="pi pi-spinner pi-spin"></i> Updating...
+                } @else {
+                  Update Password
+                }
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Profile Information -->
+        <section class="carbon-card">
+          <div class="card-heading">
+            <i class="pi pi-user card-icon"></i>
+            <h2>Account Details</h2>
+          </div>
+
+          @if (currentUser$ | async; as user) {
+            <div class="profile-details-grid">
+              <div class="detail-field">
+                <span class="field-label">Email Address</span>
+                <span class="field-value mono">{{ user.email }}</span>
+              </div>
+              <div class="detail-field">
+                <span class="field-label">Assigned Role</span>
+                <span class="field-value">{{ user.role | titlecase }}</span>
+              </div>
+              <div class="detail-field">
+                <span class="field-label">Auth Provider</span>
+                <span class="field-value">{{ user.authProvider }}</span>
+              </div>
+              <div class="detail-field">
+                <span class="field-label">Account Status</span>
+                <span class="field-value text-success"><i class="pi pi-check-circle"></i> Active & Verified</span>
+              </div>
+            </div>
+          }
+        </section>
+      </div>
+
+      <!-- Right Column: Preferences -->
+      <div class="col-side">
+        <!-- Notification Preferences -->
+        <section class="carbon-card">
+          <div class="card-heading">
+            <i class="pi pi-bell card-icon"></i>
+            <h2>Notifications</h2>
+          </div>
+
+          <div class="toggle-list">
+            <label class="toggle-row">
+              <div class="toggle-info">
+                <strong>Email Alerts</strong>
+                <p>Receive notifications about applications and updates via email.</p>
+              </div>
+              <input
+                type="checkbox"
+                class="toggle-checkbox"
+                [ngModel]="emailAlerts()"
+                (ngModelChange)="emailAlerts.set($event)" />
+            </label>
+
+            <label class="toggle-row">
+              <div class="toggle-info">
+                <strong>Application Updates</strong>
+                <p>Notify immediately when application status changes.</p>
+              </div>
+              <input
+                type="checkbox"
+                class="toggle-checkbox"
+                [ngModel]="appUpdates()"
+                (ngModelChange)="appUpdates.set($event)" />
+            </label>
+          </div>
+        </section>
+
+        <!-- Display Preferences -->
+        <section class="carbon-card">
+          <div class="card-heading">
+            <i class="pi pi-desktop card-icon"></i>
+            <h2>Display & Tables</h2>
+          </div>
+
+          <div class="toggle-list">
+            <label class="toggle-row">
+              <div class="toggle-info">
+                <strong>Compact View</strong>
+                <p>Show higher data density in table listings.</p>
+              </div>
+              <input
+                type="checkbox"
+                class="toggle-checkbox"
+                [ngModel]="compactTables()"
+                (ngModelChange)="compactTables.set($event)" />
+            </label>
+          </div>
+
+          <div class="pref-actions">
+            <button
+              type="button"
+              class="carbon-btn-secondary"
+              (click)="savePreferences()">
+              Save Preferences
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 </div>

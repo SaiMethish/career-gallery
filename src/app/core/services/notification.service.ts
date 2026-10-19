@@ -18,6 +18,10 @@ export class NotificationService {
     return this.http.patch<void>(`${this.base}/${id}/read`, {});
   }
 
+  markAllAsRead(): Observable<void> {
+    return this.http.patch<void>(`${this.base}/read-all`, {});
+  }
+
   getUnreadCount(): Observable<number> {
     return this.http.get<number>(`${this.base}/unread-count`);
   }

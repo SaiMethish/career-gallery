@@ -80,17 +80,17 @@ export class NotificationsComponent implements OnInit {
   }
 
   markAllAsRead(): void {
-    const unreadIds = this.notifications().filter(n => !n.isRead).map(n => n.id);
-    if (unreadIds.length === 0) return;
+    const unreadCount = this.notifications().filter(n => !n.isRead).length;
+    if (unreadCount === 0) return;
 
     // Optimistically mark all as read
     this.notifications.update(current => current.map(n => ({ ...n, isRead: true })));
 
-    // Since we don't have a bulk API, we will fire requests for all unread items
-    unreadIds.forEach(id => {
-      this.notificationService.markAsRead(id).subscribe({
-        error: (err) => console.error('Failed to mark as read', err)
-      });
+    this.notificationService.markAllAsRead().subscribe({
+      error: (err) => {
+        console.error('Failed to mark all as read', err);
+        this.loadNotifications();
+      }
     });
   }
 

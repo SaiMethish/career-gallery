@@ -42,6 +42,14 @@ export class CandidateService {
     return this.http.post(`${this.base}/profile/resume/apply`, dto, { responseType: 'text' });
   }
 
+  getResumeDownloadUrl(filename?: string): string {
+    if (filename) {
+      const clean = filename.split('/').pop()?.split('\\').pop() || filename;
+      return `${this.base}/profile/resume/download/${encodeURIComponent(clean)}`;
+    }
+    return `${this.base}/profile/resume/download`;
+  }
+
   // ── Applications ───────────────────────────────────────────
   getMyApplications(page = 0, size = 10): Observable<PageResponse<ApplicationResponseDTO>> {
     return this.http.get<PageResponse<ApplicationResponseDTO>>(

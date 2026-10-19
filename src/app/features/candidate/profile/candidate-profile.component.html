@@ -90,9 +90,12 @@
           <div class="resume-file-badge">
             <div class="resume-file-icon"><i class="pi pi-file-pdf"></i></div>
             <div class="resume-file-info">
-              <span class="resume-file-name">resume.pdf</span>
+              <span class="resume-file-name">{{ getResumeFileName() }}</span>
               <span class="resume-file-status"><i class="pi pi-check-circle"></i> Uploaded</span>
             </div>
+            <a [href]="getResumeDownloadUrl()" target="_blank" class="resume-download-btn" title="Download Resume">
+              <i class="pi pi-download"></i>
+            </a>
           </div>
         }
 

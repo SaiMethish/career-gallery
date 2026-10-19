@@ -54,6 +54,13 @@
       color: var(--color-text-secondary);
     }
 
+    .job-card__company-link {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+      &:hover { color: var(--color-primary); text-decoration: underline; }
+    }
+
     .job-card__save-btn {
       flex-shrink: 0;
       background: transparent;

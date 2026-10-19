@@ -1,0 +1,131 @@
+<div class="admin-jobs fade-in">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Job Moderation</h1>
+      <p class="page-desc">Audit, review, and moderate job postings across all recruiters ({{ totalElements() }} active postings).</p>
+    </div>
+  </header>
+
+  @if (loading() && jobs().length === 0) {
+    <div class="loading-state">
+      <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+      <span>Loading platform job postings...</span>
+    </div>
+  } @else if (jobs().length === 0) {
+    <app-empty-state
+      icon="pi-briefcase"
+      title="No Jobs Found"
+      message="There are currently no job postings in the database.">
+      <button class="carbon-btn-ghost" (click)="loadJobs(0)">Refresh</button>
+    </app-empty-state>
+  } @else {
+    <!-- Jobs Table -->
+    <div class="table-container">
+      <table class="carbon-table">
+        <thead>
+          <tr>
+            <th>Job & Company</th>
+            <th>Location & Type</th>
+            <th>Salary Range</th>
+            <th>Status</th>
+            <th>Applicants</th>
+            <th>Date Posted</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (job of jobs(); track job.id) {
+            <tr>
+              <td class="job-cell">
+                <div class="company-badge">{{ job.companyName?.charAt(0)?.toUpperCase() || 'J' }}</div>
+                <div class="job-meta">
+                  <a [routerLink]="['/candidate/jobs', job.id]" target="_blank" class="job-title-link">
+                    {{ job.title }} <i class="pi pi-external-link" aria-hidden="true"></i>
+                  </a>
+                  <span class="company-name">
+                    @if (job.recruiterProfileId) {
+                      <a [routerLink]="['/candidate/companies', job.recruiterProfileId]" target="_blank" class="company-link">
+                        {{ job.companyName }}
+                      </a>
+                    } @else {
+                      {{ job.companyName }}
+                    }
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="job-type-meta">
+                  <span class="type-tag">{{ formatJobType(job.jobType) }}</span>
+                  <span class="location-text">
+                    <i class="pi pi-map-marker" aria-hidden="true"></i> {{ job.location || 'Remote' }}
+                  </span>
+                </div>
+              </td>
+              <td class="salary-cell">
+                @if (job.salaryMin) {
+                  {{ job.salaryMin | number:'1.0-0' }}–{{ job.salaryMax | number:'1.0-0' }} LPA
+                } @else {
+                  <span class="text-muted">Not disclosed</span>
+                }
+              </td>
+              <td>
+                <span class="status-badge" [class]="'status-badge--' + job.status.toLowerCase()">
+                  {{ job.status }}
+                </span>
+              </td>
+              <td class="applicants-cell">
+                <span class="app-count">{{ job.applicationCount }}</span> candidates
+              </td>
+              <td class="date-cell">
+                {{ job.createdAt | date:'mediumDate' }}
+              </td>
+              <td class="actions-col">
+                <button
+                  type="button"
+                  class="action-btn-delete"
+                  (click)="deleteJob(job)"
+                  [disabled]="deletingId() === job.id"
+                  [id]="'btn-delete-job-' + job.id"
+                  title="Permanently remove this job posting">
+                  @if (deletingId() === job.id) {
+                    <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+                  } @else {
+                    <i class="pi pi-trash" aria-hidden="true"></i>
+                  }
+                  Remove
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-bar">
+      <span class="pagination-info">
+        Page <strong>{{ currentPage() + 1 }}</strong> of <strong>{{ totalPages() }}</strong>
+        ({{ totalElements() }} total jobs)
+      </span>
+      <div class="pagination-actions">
+        <button
+          type="button"
+          class="carbon-btn-ghost pag-btn"
+          [disabled]="currentPage() === 0 || loading()"
+          (click)="prevPage()"
+          id="btn-jobs-prev-page">
+          <i class="pi pi-chevron-left" aria-hidden="true"></i> Previous
+        </button>
+        <button
+          type="button"
+          class="carbon-btn-ghost pag-btn"
+          [disabled]="currentPage() + 1 >= totalPages() || loading()"
+          (click)="nextPage()"
+          id="btn-jobs-next-page">
+          Next <i class="pi pi-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  }
+</div>

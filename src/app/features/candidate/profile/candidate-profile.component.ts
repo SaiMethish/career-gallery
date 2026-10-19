@@ -328,4 +328,14 @@ export class CandidateProfileComponent implements OnInit {
     this.profileForm.get('skills')?.markAsDirty();
     this.onSave();
   }
+
+  getResumeDownloadUrl(): string {
+    return this.candidateService.getResumeDownloadUrl(this.profile()?.resumeUrl);
+  }
+
+  getResumeFileName(): string {
+    const url = this.profile()?.resumeUrl;
+    if (!url) return 'resume.pdf';
+    return url.split('/').pop()?.split('\\').pop() || 'resume.pdf';
+  }
 }

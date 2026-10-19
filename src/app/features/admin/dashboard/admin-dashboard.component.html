@@ -1,0 +1,124 @@
+<div class="admin-dashboard fade-in">
+  <!-- Page Header -->
+  <header class="dash-header">
+    <div class="dash-header__meta">
+      <span class="dash-badge">
+        <i class="pi pi-shield" aria-hidden="true"></i> Administrative Control Center
+      </span>
+      <h1 class="dash-title">Platform Overview</h1>
+      <p class="dash-desc">Live metrics, system statistics, user verification, and job moderation.</p>
+    </div>
+    <div class="dash-header__actions">
+      <button class="carbon-btn-ghost" (click)="loadStats()" [disabled]="loading()" id="btn-refresh-stats">
+        <i [class]="loading() ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'" aria-hidden="true"></i>
+        Refresh Data
+      </button>
+    </div>
+  </header>
+
+  @if (loading() && !stats()) {
+    <div class="loading-state">
+      <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+      <span>Loading platform metrics...</span>
+    </div>
+  } @else {
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-card--primary">
+        <div class="kpi-card__header">
+          <span class="kpi-label">Total Users</span>
+          <i class="pi pi-users kpi-icon" aria-hidden="true"></i>
+        </div>
+        <div class="kpi-value">{{ stats()?.totalUsers || 0 }}</div>
+        <div class="kpi-footer">Across candidates, recruiters, and admins</div>
+      </div>
+
+      <div class="kpi-card kpi-card--blue">
+        <div class="kpi-card__header">
+          <span class="kpi-label">Candidates</span>
+          <i class="pi pi-user kpi-icon" aria-hidden="true"></i>
+        </div>
+        <div class="kpi-value">{{ stats()?.candidateCount || 0 }}</div>
+        <div class="kpi-footer">Active talent looking for opportunities</div>
+      </div>
+
+      <div class="kpi-card kpi-card--purple">
+        <div class="kpi-card__header">
+          <span class="kpi-label">Recruiters</span>
+          <i class="pi pi-building kpi-icon" aria-hidden="true"></i>
+        </div>
+        <div class="kpi-value">{{ stats()?.recruiterCount || 0 }}</div>
+        <div class="kpi-footer">Verified company hiring managers</div>
+      </div>
+
+      <div class="kpi-card kpi-card--teal">
+        <div class="kpi-card__header">
+          <span class="kpi-label">Active Jobs</span>
+          <i class="pi pi-briefcase kpi-icon" aria-hidden="true"></i>
+        </div>
+        <div class="kpi-value">{{ stats()?.openJobs || 0 }}</div>
+        <div class="kpi-footer">Of {{ stats()?.totalJobs || 0 }} total platform job listings</div>
+      </div>
+
+      <div class="kpi-card kpi-card--green">
+        <div class="kpi-card__header">
+          <span class="kpi-label">Applications</span>
+          <i class="pi pi-send kpi-icon" aria-hidden="true"></i>
+        </div>
+        <div class="kpi-value">{{ stats()?.totalApplications || 0 }}</div>
+        <div class="kpi-footer">Candidate submissions across all postings</div>
+      </div>
+
+      <div class="kpi-card kpi-card--red">
+        <div class="kpi-card__header">
+          <span class="kpi-label">Admin Accounts</span>
+          <i class="pi pi-key kpi-icon" aria-hidden="true"></i>
+        </div>
+        <div class="kpi-value">{{ stats()?.adminCount || 0 }}</div>
+        <div class="kpi-footer">Privileged platform operators</div>
+      </div>
+    </div>
+
+    <!-- Quick Shortcuts & System Status -->
+    <div class="action-grid">
+      <div class="action-card">
+        <div class="action-card__icon action-card__icon--users">
+          <i class="pi pi-users" aria-hidden="true"></i>
+        </div>
+        <div class="action-card__content">
+          <h3>User Management</h3>
+          <p>Inspect registered users, filter by role, and activate or deactivate account verifications.</p>
+          <a routerLink="/admin/users" class="carbon-btn-primary" id="btn-goto-users">
+            Open User Directory <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="action-card__icon action-card__icon--jobs">
+          <i class="pi pi-shield" aria-hidden="true"></i>
+        </div>
+        <div class="action-card__content">
+          <h3>Job Moderation</h3>
+          <p>Audit job postings across all corporate entities and remove fraudulent or spam listings.</p>
+          <a routerLink="/admin/jobs" class="carbon-btn-primary" id="btn-goto-jobs">
+            Moderate Jobs <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="action-card__icon action-card__icon--settings">
+          <i class="pi pi-lock" aria-hidden="true"></i>
+        </div>
+        <div class="action-card__content">
+          <h3>Admin Security</h3>
+          <p>Update administrator credentials, manage session preferences, and review RBAC policies.</p>
+          <a routerLink="/admin/settings" class="carbon-btn-ghost" id="btn-goto-admin-settings">
+            Security Settings <i class="pi pi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</div>

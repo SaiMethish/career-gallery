@@ -1,0 +1,71 @@
+<div class="shell">
+  <!-- Sidebar -->
+  <nav class="sidebar" aria-label="Administrator navigation">
+    <div class="sidebar__brand">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" fill="#da1e28"/>
+        <path d="M16 6L26 12V20L16 26L6 20V12L16 6Z" stroke="white" stroke-width="2" fill="none"/>
+        <path d="M16 12L20 16L16 20L12 16L16 12Z" fill="white"/>
+      </svg>
+      <div class="sidebar__brand-text">
+        <span class="sidebar__brand-name">Carbon Talent</span>
+        <span class="sidebar__brand-sub">Admin Console</span>
+      </div>
+    </div>
+
+    <ul class="sidebar__nav" role="list">
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="sidebar__link--active"
+           class="sidebar__link" id="nav-admin-dashboard">
+          <i class="pi pi-chart-bar" aria-hidden="true"></i>
+          <span>Overview</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/users" routerLinkActive="sidebar__link--active"
+           class="sidebar__link" id="nav-admin-users">
+          <i class="pi pi-users" aria-hidden="true"></i>
+          <span>User Directory</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/jobs" routerLinkActive="sidebar__link--active"
+           class="sidebar__link" id="nav-admin-jobs">
+          <i class="pi pi-shield" aria-hidden="true"></i>
+          <span>Job Moderation</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar__footer">
+      <a routerLink="/admin/settings" routerLinkActive="sidebar__link--active"
+         class="sidebar__link" id="nav-admin-settings">
+        <i class="pi pi-cog" aria-hidden="true"></i>
+        <span>Security & Settings</span>
+      </a>
+      <button class="sidebar__link sidebar__logout" (click)="logout()" id="btn-admin-logout"
+              aria-label="Log out">
+        <i class="pi pi-sign-out" aria-hidden="true"></i>
+        <span>Log out</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main area -->
+  <div class="shell__main">
+    <header class="shell__header" role="banner">
+      <div class="shell__header-left">
+        <span class="shell__role-badge">System Administrator</span>
+      </div>
+      <div class="shell__header-right">
+        <div class="shell__user">
+          <div class="shell__user-avatar" aria-hidden="true">{{ userInitial$ | async }}</div>
+          <span class="shell__user-email">{{ (currentUser$ | async)?.email }}</span>
+        </div>
+      </div>
+    </header>
+    <main class="shell__content" id="main-content" role="main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

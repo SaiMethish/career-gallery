@@ -45,4 +45,9 @@ export class AuthService {
   resetPassword(email: string, newPassword: string): Observable<void> {
     return this.http.post<void>(`${this.base}/reset-password`, { email, newPassword });
   }
+
+  /** POST /auth/change-password — changes authenticated user password */
+  changePassword(currentPassword: string, newPassword: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/change-password`, { currentPassword, newPassword });
+  }
 }

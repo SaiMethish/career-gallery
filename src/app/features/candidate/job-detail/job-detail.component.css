@@ -9,6 +9,7 @@
     .detail-hero__info { flex: 1; }
     .detail-title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); margin-bottom: var(--space-1); }
     .detail-company { font-size: var(--font-size-base); color: var(--color-text-secondary); }
+    .detail-company-link { color: var(--color-text-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 500; transition: color var(--transition-fast); &:hover { color: var(--color-primary); text-decoration: underline; } i { font-size: 0.75rem; } }
 
     .detail-hero__actions { display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0; }
 

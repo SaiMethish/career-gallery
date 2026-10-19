@@ -21,7 +21,16 @@
             </div>
             <div class="detail-hero__info">
               <h1 class="detail-title">{{ job()!.title }}</h1>
-              <p class="detail-company">{{ job()!.companyName }}</p>
+              <p class="detail-company">
+                @if (job()!.recruiterProfileId) {
+                  <a [routerLink]="['/candidate/companies', job()!.recruiterProfileId]" class="detail-company-link"
+                     id="link-view-company">
+                    {{ job()!.companyName }} <i class="pi pi-external-link" aria-hidden="true"></i>
+                  </a>
+                } @else {
+                  {{ job()!.companyName }}
+                }
+              </p>
             </div>
             <div class="detail-hero__actions">
               <button class="detail-save-btn"
