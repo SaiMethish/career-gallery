@@ -2,11 +2,10 @@ import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn } from
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { catchError, switchMap, take, throwError, EMPTY, BehaviorSubject, filter } from 'rxjs';
+import { catchError, switchMap, take, throwError, EMPTY, BehaviorSubject, filter, retry, timer } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../services/toast.service';
 import * as AuthActions from '../auth/auth.actions';
-import { selectIsRefreshing, selectAccessToken } from '../auth/auth.selectors';
 import { APP_ROUTES } from '../constants/routes.constants';
 import { environment } from '../../../environments/environment';
 
@@ -14,8 +13,12 @@ import { environment } from '../../../environments/environment';
 let isRefreshing = false;
 const refreshSubject = new BehaviorSubject<string | null>(null);
 
+// Flag to avoid spamming multiple cold start toasts simultaneously
+let coldStartNotified = false;
+
 /**
  * Error interceptor that:
+ * - Render Cold Starts (0, 502, 503, 504): automatically retries with backoff instead of failing immediately
  * - 401: attempts silent refresh → retries original request → logs out if refresh fails
  * - 403: redirects to /not-authorized
  * - 5xx: shows a generic error toast
@@ -27,6 +30,28 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(ToastService);
 
   return next(req).pipe(
+    // Handle Render free tier cold-start gateway dropouts gracefully
+    retry({
+      count: 3,
+      delay: (error: HttpErrorResponse, retryCount) => {
+        const isColdStart = [0, 502, 503, 504].includes(error.status);
+        if (isColdStart && req.url.startsWith(environment.apiUrl)) {
+          if (!coldStartNotified) {
+            coldStartNotified = true;
+            toast.info(
+              'Server Waking Up',
+              'The server is spinning up from sleep (Render free tier). Retrying in a moment...'
+            );
+            setTimeout(() => {
+              coldStartNotified = false;
+            }, 12000);
+          }
+          // Exponential backoff: 5s, 10s, 15s
+          return timer(retryCount * 5000);
+        }
+        return throwError(() => error);
+      },
+    }),
     catchError((error: HttpErrorResponse) => {
       if (!req.url.startsWith(environment.apiUrl)) return throwError(() => error);
 

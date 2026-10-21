@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'deployed backend url',
+  apiUrl: 'https://jobportal-26gu.onrender.com',
 };

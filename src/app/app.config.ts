@@ -5,7 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { provideStore, Store } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { firstValueFrom, filter } from 'rxjs';
+import { firstValueFrom, filter, timeout } from 'rxjs';
 import { MyPreset } from './theme.preset';
 import { routes } from './app.routes';
 import { authReducer } from './core/auth/auth.reducer';
@@ -19,14 +19,22 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 /**
  * App initializer that performs a silent token refresh on startup.
  * This restores the session from the httpOnly refresh_token cookie.
- * The app waits for sessionRestored = true before rendering guarded routes.
+ * Caps waiting time to 3.5s so Render cold starts do not hold the app on a blank screen.
  */
 function initializeAuth(store: Store) {
   return async () => {
     store.dispatch(AuthActions.refreshToken());
-    await firstValueFrom(
-      store.select(selectSessionRestored).pipe(filter((restored) => restored))
-    );
+    try {
+      await firstValueFrom(
+        store.select(selectSessionRestored).pipe(
+          filter((restored) => restored),
+          timeout(3500)
+        )
+      );
+    } catch {
+      // If server is on a cold start, allow UI to render immediately;
+      // the background refresh will still resolve and update auth state once awake.
+    }
   };
 }
 
