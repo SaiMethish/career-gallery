@@ -28,9 +28,19 @@
 
       <div class="job-card__tags">
         <span class="job-card__tag job-card__tag--type">{{ formatJobType(job.jobType) }}</span>
+        @if (job.source && job.source !== 'INTERNAL') {
+          <span class="job-card__tag job-card__tag--ats">
+            <i class="pi pi-bolt" aria-hidden="true"></i> {{ job.source }}
+          </span>
+        }
+        @if (job.companyCategory) {
+          <span class="job-card__tag job-card__tag--cat">
+            {{ job.companyCategory }}
+          </span>
+        }
         @if (job.location) {
           <span class="job-card__tag">
-            <i class="pi pi-map-marker" aria-hidden="true"></i>{{ job.location }}
+            <i class="pi pi-map-marker" aria-hidden="true"></i>{{ job.city || job.location }}
           </span>
         }
         @if (job.experienceMin !== undefined || job.experienceMax !== undefined) {
@@ -56,15 +66,33 @@
           Posted {{ job.createdAt | date:'mediumDate' }}
         </span>
         <span class="job-card__applicants">{{ job.applicationCount }} applicants</span>
+
+        <button class="job-card__match-btn"
+                (click)="onCheckMatch($event)"
+                [id]="'btn-match-job-' + job.id"
+                title="Compare with my resume using AI">
+          <i class="pi pi-sparkles" aria-hidden="true"></i> AI Match
+        </button>
+
         @if (showApplyButton) {
-          <button class="job-card__apply-btn"
-                  [class.job-card__apply-btn--applied]="isApplied"
-                  [disabled]="isApplied"
-                  (click)="onApply()"
-                  [id]="'btn-apply-job-' + job.id"
-                  [attr.aria-label]="isApplied ? 'Already applied to ' + job.title : 'Apply to ' + job.title">
-            {{ isApplied ? 'Applied' : 'Apply Now' }}
-          </button>
+          @if (job.applicationUrl) {
+            <a [href]="job.applicationUrl"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="job-card__apply-btn job-card__apply-btn--ext"
+               [id]="'btn-apply-job-' + job.id">
+              Apply on Site <i class="pi pi-external-link" aria-hidden="true"></i>
+            </a>
+          } @else {
+            <button class="job-card__apply-btn"
+                    [class.job-card__apply-btn--applied]="isApplied"
+                    [disabled]="isApplied"
+                    (click)="onApply()"
+                    [id]="'btn-apply-job-' + job.id"
+                    [attr.aria-label]="isApplied ? 'Already applied to ' + job.title : 'Apply to ' + job.title">
+              {{ isApplied ? 'Applied' : 'Apply Now' }}
+            </button>
+          }
         }
       </div>
     </article>

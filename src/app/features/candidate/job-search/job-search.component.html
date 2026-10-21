@@ -1,100 +1,215 @@
 <div class="job-search fade-in">
-      <!-- Page header -->
-      <div class="job-search__header">
-        <h1 class="job-search__title">Browse Jobs</h1>
-        <p class="job-search__sub">{{ totalElements() }} jobs found</p>
-      </div>
-
-      <div class="job-search__layout">
-        <!-- Filters sidebar -->
-        <aside class="filter-panel" aria-label="Job filters">
-          <h2 class="filter-panel__title">Filters</h2>
-          <form [formGroup]="filterForm" class="filter-form">
-            <div class="filter-group">
-              <label for="search-title" class="filter-label">Job title or keyword</label>
-              <input id="search-title" type="text" pInputText formControlName="title"
-                     class="filter-input" placeholder="e.g. Software Engineer"
-                     aria-label="Search by job title"/>
-            </div>
-
-            <div class="filter-group">
-              <label for="search-location" class="filter-label">Location</label>
-              <input id="search-location" type="text" pInputText formControlName="location"
-                     class="filter-input" placeholder="e.g. Bangalore" aria-label="Filter by location"/>
-            </div>
-
-            <div class="filter-group">
-              <label for="search-skills" class="filter-label">Skills</label>
-              <input id="search-skills" type="text" pInputText formControlName="skills"
-                     class="filter-input" placeholder="e.g. React, Node.js" aria-label="Filter by skills"/>
-            </div>
-
-            <div class="filter-group">
-              <label id="job-type-label" class="filter-label">Job type</label>
-              <p-select formControlName="jobType" [options]="jobTypeOptions"
-                        optionLabel="label" optionValue="value"
-                        placeholder="Any type" [showClear]="true"
-                        styleClass="filter-select" aria-labelledby="job-type-label" />
-            </div>
-
-            <div class="filter-group">
-              <label class="filter-label">Experience (years)</label>
-              <div class="filter-range">
-                <input id="exp-min" type="number" pInputText formControlName="experienceMin"
-                       class="filter-input" placeholder="Min" min="0" aria-label="Minimum experience"/>
-                <span class="filter-range__sep">–</span>
-                <input id="exp-max" type="number" pInputText formControlName="experienceMax"
-                       class="filter-input" placeholder="Max" min="0" aria-label="Maximum experience"/>
-              </div>
-            </div>
-
-            <button type="button" class="filter-clear-btn" (click)="clearFilters()"
-                    id="btn-clear-filters" aria-label="Clear all filters">
-              Clear all filters
-            </button>
-          </form>
-        </aside>
-
-        <!-- Results -->
-        <main class="job-results" id="main-content">
-          @if (isLoading()) {
-            <div class="jobs-skeleton">
-              @for (i of [1,2,3,4,5]; track i) {
-                <div class="skeleton-card"></div>
-              }
-            </div>
-          } @else if (jobs().length === 0) {
-            <app-empty-state icon="pi-search" title="No jobs found"
-              message="Try adjusting your search filters." />
-          } @else {
-            <div class="jobs-list">
-              @for (job of jobs(); track job.id) {
-                <app-job-card [job]="job" [saved]="isSaved(job.id)"
-                              [isApplied]="isApplied(job.id)"
-                              (saveToggled)="onSaveToggle($event)"
-                              (applied)="onApply($event)" />
-              }
-            </div>
-
-            <!-- Pagination -->
-            @if (totalPages() > 1) {
-              <div class="pagination" role="navigation" aria-label="Job results pagination">
-                <button class="pagination__btn" (click)="goToPage(currentPage() - 1)"
-                        [disabled]="currentPage() === 0" id="btn-prev-page"
-                        aria-label="Previous page">
-                  <i class="pi pi-chevron-left" aria-hidden="true"></i>
-                </button>
-                <span class="pagination__info">
-                  Page {{ currentPage() + 1 }} of {{ totalPages() }}
-                </span>
-                <button class="pagination__btn" (click)="goToPage(currentPage() + 1)"
-                        [disabled]="currentPage() + 1 >= totalPages()" id="btn-next-page"
-                        aria-label="Next page">
-                  <i class="pi pi-chevron-right" aria-hidden="true"></i>
-                </button>
-              </div>
-            }
-          }
-        </main>
-      </div>
+  <!-- Page header -->
+  <div class="job-search__header">
+    <div>
+      <h1 class="job-search__title">Browse Jobs in India</h1>
+      <p class="job-search__sub">
+        {{ totalElements() }} verified positions found across top Product & Tech Service companies
+      </p>
     </div>
+    <div class="job-search__header-actions">
+      <button type="button" class="sync-ats-btn" (click)="onTriggerSync()" [disabled]="isSyncing()"
+              title="Refresh and auto-expire jobs from Greenhouse boards">
+        <i class="pi" [class.pi-spin]="isSyncing()" [class.pi-sync]="true" aria-hidden="true"></i>
+        {{ isSyncing() ? 'Syncing ATS...' : 'Sync ATS Jobs' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick City Filter Chips -->
+  <div class="city-chips-container" role="region" aria-label="Indian Tech Hubs">
+    <span class="city-chips-label"><i class="pi pi-map-marker" aria-hidden="true"></i> India Hubs:</span>
+    <div class="city-chips-list">
+      @for (city of ['Bengaluru', 'Hyderabad', 'Pune', 'Delhi NCR', 'Mumbai', 'Remote - India']; track city) {
+        <button type="button" class="city-chip"
+                [class.city-chip--active]="filterForm.get('location')?.value === city"
+                (click)="onCityChipClick(city)">
+          {{ city }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="job-search__layout">
+    <!-- Filters sidebar -->
+    <aside class="filter-panel" aria-label="Job filters">
+      <h2 class="filter-panel__title">Filters</h2>
+      <form [formGroup]="filterForm" class="filter-form">
+        <div class="filter-group">
+          <label for="search-title" class="filter-label">Job title or keyword</label>
+          <input id="search-title" type="text" pInputText formControlName="title"
+                 class="filter-input" placeholder="e.g. Software Engineer"
+                 aria-label="Search by job title"/>
+        </div>
+
+        <div class="filter-group">
+          <label for="search-location" class="filter-label">City / Location</label>
+          <input id="search-location" type="text" pInputText formControlName="location"
+                 class="filter-input" placeholder="e.g. Bengaluru, Pune" aria-label="Filter by location"/>
+        </div>
+
+        <div class="filter-group">
+          <label id="category-label" class="filter-label">Company Category</label>
+          <p-select formControlName="companyCategory" [options]="categoryOptions"
+                    optionLabel="label" optionValue="value"
+                    placeholder="All Categories" [showClear]="true"
+                    styleClass="filter-select" aria-labelledby="category-label" />
+        </div>
+
+        <div class="filter-group">
+          <label id="source-label" class="filter-label">Job Source</label>
+          <p-select formControlName="source" [options]="sourceOptions"
+                    optionLabel="label" optionValue="value"
+                    placeholder="All Sources" [showClear]="true"
+                    styleClass="filter-select" aria-labelledby="source-label" />
+        </div>
+
+        <div class="filter-group">
+          <label for="search-skills" class="filter-label">Skills</label>
+          <input id="search-skills" type="text" pInputText formControlName="skills"
+                 class="filter-input" placeholder="e.g. Java, Python, React" aria-label="Filter by skills"/>
+        </div>
+
+        <div class="filter-group">
+          <label id="job-type-label" class="filter-label">Job type</label>
+          <p-select formControlName="jobType" [options]="jobTypeOptions"
+                    optionLabel="label" optionValue="value"
+                    placeholder="Any type" [showClear]="true"
+                    styleClass="filter-select" aria-labelledby="job-type-label" />
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Experience (years)</label>
+          <div class="filter-range">
+            <input id="exp-min" type="number" pInputText formControlName="experienceMin"
+                   class="filter-input" placeholder="Min" min="0" aria-label="Minimum experience"/>
+            <span class="filter-range__sep">–</span>
+            <input id="exp-max" type="number" pInputText formControlName="experienceMax"
+                   class="filter-input" placeholder="Max" min="0" aria-label="Maximum experience"/>
+          </div>
+        </div>
+
+        <button type="button" class="filter-clear-btn" (click)="clearFilters()"
+                id="btn-clear-filters" aria-label="Clear all filters">
+          Clear all filters
+        </button>
+      </form>
+    </aside>
+
+    <!-- Results -->
+    <main class="job-results" id="main-content">
+      @if (isLoading()) {
+        <div class="jobs-skeleton">
+          @for (i of [1,2,3,4,5]; track i) {
+            <div class="skeleton-card"></div>
+          }
+        </div>
+      } @else if (jobs().length === 0) {
+        <app-empty-state icon="pi-search" title="No jobs found"
+          message="Try selecting a different Indian tech hub or resetting your filters." />
+      } @else {
+        <div class="jobs-list">
+          @for (job of jobs(); track job.id) {
+            <app-job-card [job]="job" [saved]="isSaved(job.id)"
+                          [isApplied]="isApplied(job.id)"
+                          (saveToggled)="onSaveToggle($event)"
+                          (applied)="onApply($event)"
+                          (matchChecked)="onCheckMatch($event)" />
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages() > 1) {
+          <div class="pagination" role="navigation" aria-label="Job results pagination">
+            <button class="pagination__btn" (click)="goToPage(currentPage() - 1)"
+                    [disabled]="currentPage() === 0" id="btn-prev-page"
+                    aria-label="Previous page">
+              <i class="pi pi-chevron-left" aria-hidden="true"></i>
+            </button>
+            <span class="pagination__info">
+              Page {{ currentPage() + 1 }} of {{ totalPages() }}
+            </span>
+            <button class="pagination__btn" (click)="goToPage(currentPage() + 1)"
+                    [disabled]="currentPage() + 1 >= totalPages()" id="btn-next-page"
+                    aria-label="Next page">
+              <i class="pi pi-chevron-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        }
+      }
+    </main>
+  </div>
+
+  <!-- AI Resume Match Dialog -->
+  <p-dialog [(visible)]="showMatchDialog" [modal]="true" [dismissableMask]="true"
+            [style]="{ width: '92%', maxWidth: '580px' }" header="AI Resume Match Analysis"
+            [draggable]="false" [resizable]="false">
+    @if (isMatching()) {
+      <div class="match-loading">
+        <i class="pi pi-spin pi-spinner match-loading__icon"></i>
+        <p class="match-loading__text">Comparing your uploaded resume with job requirements using AI...</p>
+      </div>
+    } @else if (selectedMatch()) {
+      <div class="match-content">
+        <div class="match-header">
+          <div class="match-header__info">
+            <h3 class="match-header__title">{{ selectedMatch()?.jobTitle }}</h3>
+            <p class="match-header__company">{{ selectedMatch()?.companyName }}</p>
+          </div>
+          <div class="match-badge"
+               [class.match-badge--high]="(selectedMatch()?.matchScore ?? 0) >= 75"
+               [class.match-badge--mid]="(selectedMatch()?.matchScore ?? 0) >= 50 && (selectedMatch()?.matchScore ?? 0) < 75"
+               [class.match-badge--low]="(selectedMatch()?.matchScore ?? 0) < 50">
+            <span class="match-badge__score">{{ selectedMatch()?.matchScore }}%</span>
+            <span class="match-badge__label">Match Score</span>
+          </div>
+        </div>
+
+        <div class="match-summary">
+          <i class="pi pi-info-circle" aria-hidden="true"></i>
+          <p>{{ selectedMatch()?.summary }}</p>
+        </div>
+
+        <!-- Matching skills -->
+        @if (selectedMatch()?.matchingSkills && (selectedMatch()?.matchingSkills?.length ?? 0) > 0) {
+          <div class="skills-block">
+            <h4 class="skills-block__title skills-block__title--match">
+              <i class="pi pi-check-circle" aria-hidden="true"></i> Matching Skills in Your Resume
+            </h4>
+            <div class="skills-chips">
+              @for (skill of selectedMatch()?.matchingSkills; track skill) {
+                <span class="skill-chip skill-chip--match">{{ skill }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Missing skills -->
+        @if (selectedMatch()?.missingSkills && (selectedMatch()?.missingSkills?.length ?? 0) > 0) {
+          <div class="skills-block">
+            <h4 class="skills-block__title skills-block__title--missing">
+              <i class="pi pi-exclamation-circle" aria-hidden="true"></i> Missing / Required Tools
+            </h4>
+            <div class="skills-chips">
+              @for (skill of selectedMatch()?.missingSkills; track skill) {
+                <span class="skill-chip skill-chip--missing">{{ skill }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="match-actions">
+          @if (selectedMatch()?.applicationUrl) {
+            <a [href]="selectedMatch()?.applicationUrl" target="_blank" rel="noopener noreferrer"
+               class="match-action-btn match-action-btn--primary">
+              Apply on Company Site <i class="pi pi-external-link" aria-hidden="true"></i>
+            </a>
+          }
+          <button type="button" class="match-action-btn match-action-btn--secondary" (click)="closeMatchDialog()">
+            Close
+          </button>
+        </div>
+      </div>
+    }
+  </p-dialog>
+</div>

@@ -21,10 +21,16 @@ export class JobCardComponent {
   @Input() showApplyButton = true;
   @Output() saveToggled = new EventEmitter<string>();
   @Output() applied = new EventEmitter<string>();
+  @Output() matchChecked = new EventEmitter<JobResponseDTO>();
 
   onSaveToggle(event: Event): void {
     event.preventDefault();
     this.saveToggled.emit(this.job.id);
+  }
+
+  onCheckMatch(event: Event): void {
+    event.preventDefault();
+    this.matchChecked.emit(this.job);
   }
 
   onApply(): void {
