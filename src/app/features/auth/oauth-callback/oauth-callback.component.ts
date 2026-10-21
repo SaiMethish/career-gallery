@@ -20,6 +20,9 @@ export class OAuthCallbackComponent implements OnInit {
   ngOnInit(): void {
     const accessToken = this.route.snapshot.queryParamMap.get('access');
     if (accessToken) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('has_session', 'true');
+      }
       this.store.dispatch(AuthActions.oauthCallback({ accessToken }));
       // Navigate to dashboard; effects will handle role-based redirect on next login
       this.router.navigate(['/candidate/dashboard']);

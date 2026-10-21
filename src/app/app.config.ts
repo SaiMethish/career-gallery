@@ -17,12 +17,19 @@ import { selectSessionRestored } from './core/auth/auth.selectors';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
 /**
- * App initializer that performs a silent token refresh on startup.
- * This restores the session from the httpOnly refresh_token cookie.
+ * App initializer that performs a silent token refresh on startup
+ * ONLY if the user has previously logged in on this browser (marked by 'has_session' in localStorage).
+ * For first-time visitors / guests, it immediately marks session as restored without hitting the network.
  * Caps waiting time to 3.5s so Render cold starts do not hold the app on a blank screen.
  */
 function initializeAuth(store: Store) {
   return async () => {
+    const hasSession = typeof window !== 'undefined' && localStorage.getItem('has_session') === 'true';
+    if (!hasSession) {
+      store.dispatch(AuthActions.refreshTokenFailure());
+      return;
+    }
+
     store.dispatch(AuthActions.refreshToken());
     try {
       await firstValueFrom(

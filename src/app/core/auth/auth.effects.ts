@@ -38,6 +38,9 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
         tap(({ response, returnUrl }) => {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('has_session', 'true');
+          }
           const destination = returnUrl ?? this.getDashboardRoute(response.role);
           this.router.navigateByUrl(destination);
         })
@@ -66,6 +69,9 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.registerSuccess),
         tap(({ response }) => {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('has_session', 'true');
+          }
           this.toast.success('Welcome!', 'Your account has been created.');
           this.router.navigateByUrl(this.getDashboardRoute(response.role));
         })
@@ -79,8 +85,18 @@ export class AuthEffects {
       ofType(AuthActions.refreshToken),
       switchMap(() =>
         this.authService.refresh().pipe(
-          map((response) => AuthActions.refreshTokenSuccess({ response })),
-          catchError(() => of(AuthActions.refreshTokenFailure()))
+          map((response) => {
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('has_session', 'true');
+            }
+            return AuthActions.refreshTokenSuccess({ response });
+          }),
+          catchError(() => {
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('has_session');
+            }
+            return of(AuthActions.refreshTokenFailure());
+          })
         )
       )
     )
@@ -91,6 +107,11 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.logout),
+        tap(() => {
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('has_session');
+          }
+        }),
         switchMap(() =>
           this.authService.logout().pipe(
             catchError(() => of(null)), // Ignore errors on logout
