@@ -25,7 +25,11 @@ export class AiRecommendationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.jobService.getRecommendations().subscribe({
-      next: (recs) => { this.recommendations.set(recs); this.isLoading.set(false); },
+      next: (recs) => {
+        const highMatch = (recs || []).filter((r) => (r.score ?? 0) >= 0.70);
+        this.recommendations.set(highMatch);
+        this.isLoading.set(false);
+      },
       error: () => this.isLoading.set(false),
     });
 

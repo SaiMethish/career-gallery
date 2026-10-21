@@ -6,7 +6,7 @@
         </div>
         <h1 class="ai-recs__title">Recommended for You</h1>
         <p class="ai-recs__sub">
-          Jobs matched to your profile skills and experience level.
+          Showing jobs with a 70%+ AI compatibility match to your skills and resume, from both Greenhouse and direct postings.
         </p>
       </div>
 
@@ -15,14 +15,14 @@
           @for (i of [1,2,3]; track i) { <div class="skeleton-card"></div> }
         </div>
       } @else if (recommendations().length === 0) {
-        <app-empty-state icon="pi-sparkles" title="No recommendations yet"
-          message="Complete your profile with skills and experience to get AI-powered matches." />
+        <app-empty-state icon="pi-sparkles" title="No 70%+ Matches Found"
+          message="We couldn't find active jobs with a 70%+ match. Update your profile skills or upload an updated resume to unlock more matches!" />
       } @else {
         <div class="recs-list">
           @for (rec of recommendations(); track rec.job.id) {
             <div class="rec-item">
               <div class="rec-item__score" [attr.aria-label]="'Match score: ' + rec.score + ' percent'">
-                <span class="rec-item__score-num">{{ rec.score * 100 | number:'1.3-3' }}<span class="rec-item__score-pct">%</span></span>
+                <span class="rec-item__score-num">{{ rec.score * 100 | number:'1.0-0' }}<span class="rec-item__score-pct">%</span></span>
                 <span class="rec-item__score-label">Match</span>
               </div>
               <div class="rec-item__card">
