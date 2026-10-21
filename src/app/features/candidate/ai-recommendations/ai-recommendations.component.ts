@@ -26,8 +26,10 @@ export class AiRecommendationsComponent implements OnInit {
   ngOnInit(): void {
     this.jobService.getRecommendations().subscribe({
       next: (recs) => {
-        const highMatch = (recs || []).filter((r) => (r.score ?? 0) >= 0.70);
-        this.recommendations.set(highMatch);
+        const sortedRecs = (recs || [])
+          .filter((r) => (r.score ?? 0) >= 0.10)
+          .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+        this.recommendations.set(sortedRecs);
         this.isLoading.set(false);
       },
       error: () => this.isLoading.set(false),
@@ -58,5 +60,19 @@ export class AiRecommendationsComponent implements OnInit {
       },
       error: () => this.toast.error('Error', 'Failed to apply.'),
     });
+  }
+
+  getScoreClass(score: number): string {
+    if (score >= 0.80) return 'rec-item__score--excellent';
+    if (score >= 0.60) return 'rec-item__score--good';
+    if (score >= 0.40) return 'rec-item__score--moderate';
+    return 'rec-item__score--base';
+  }
+
+  getScoreTierLabel(score: number): string {
+    if (score >= 0.80) return 'Top Match';
+    if (score >= 0.60) return 'High Match';
+    if (score >= 0.40) return 'Good Match';
+    return 'Match';
   }
 }
