@@ -7,6 +7,7 @@ import { selectCurrentUser, selectIsLoggedIn } from '../../core/auth/auth.select
 import * as AuthActions from '../../core/auth/auth.actions';
 import { APP_ROUTES } from '../../core/constants/routes.constants';
 import { NotificationBellComponent } from '../../shared/components/notification-bell/notification-bell.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 /**
  * Shell layout for authenticated candidate users.
@@ -15,9 +16,10 @@ import { NotificationBellComponent } from '../../shared/components/notification-
 @Component({
   selector: 'app-candidate-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, AsyncPipe, NotificationBellComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, AsyncPipe, NotificationBellComponent, FooterComponent],
   templateUrl: './candidate-shell.component.html',
-  styleUrl: './candidate-shell.component.css'})
+  styleUrl: './candidate-shell.component.css',
+})
 export class CandidateShellComponent {
   private readonly store = inject(Store);
 

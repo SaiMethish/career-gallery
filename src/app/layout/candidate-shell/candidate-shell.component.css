@@ -142,4 +142,10 @@
       flex: 1;
       overflow-y: auto;
       background: var(--color-surface);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .shell__body {
+      flex: 1 0 auto;
     }

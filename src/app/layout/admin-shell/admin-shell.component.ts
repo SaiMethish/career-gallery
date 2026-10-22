@@ -5,6 +5,7 @@ import { AsyncPipe } from '@angular/common';
 import { map } from 'rxjs';
 import { selectCurrentUser } from '../../core/auth/auth.selectors';
 import * as AuthActions from '../../core/auth/auth.actions';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 /**
  * Shell layout for authenticated platform administrators.
@@ -13,7 +14,7 @@ import * as AuthActions from '../../core/auth/auth.actions';
 @Component({
   selector: 'app-admin-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, AsyncPipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, AsyncPipe, FooterComponent],
   templateUrl: './admin-shell.component.html',
   styleUrl: './admin-shell.component.css',
 })
