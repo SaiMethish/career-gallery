@@ -8,7 +8,7 @@ import { JobResponseDTO, JobType, JobStatus } from '../../../core/models/job.mod
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
-/** Job detail page — matches Stitch "Job Details - Carbon Talent" screen */
+/** Job detail page — matches Stitch "Job Details - JobOrbit" screen */
 @Component({
   selector: 'app-job-detail',
   standalone: true,

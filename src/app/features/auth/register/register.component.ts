@@ -11,7 +11,7 @@ import * as AuthActions from '../../../core/auth/auth.actions';
 import { selectIsLoading, selectAuthError } from '../../../core/auth/auth.selectors';
 import { Role } from '../../../core/models/auth.model';
 
-/** Register page — matches Stitch "Register - Carbon Talent" screen */
+/** Register page — matches Stitch "Register - JobOrbit" screen */
 @Component({
   selector: 'app-register',
   standalone: true,

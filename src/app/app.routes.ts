@@ -24,19 +24,19 @@ export const routes: Routes = [
         path: 'login',
         loadComponent: () =>
           import('./features/auth/login/login.component').then((m) => m.LoginComponent),
-        title: 'Sign In — Carbon Talent',
+        title: 'Sign In — JobOrbit',
       },
       {
         path: 'register',
         loadComponent: () =>
           import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
-        title: 'Create Account — Carbon Talent',
+        title: 'Create Account — JobOrbit',
       },
       {
         path: 'reset-password',
         loadComponent: () =>
           import('./features/auth/reset-password/reset-password.component').then((m) => m.ResetPasswordComponent),
-        title: 'Reset Password — Carbon Talent',
+        title: 'Reset Password — JobOrbit',
       },
     ],
   },
@@ -67,7 +67,7 @@ export const routes: Routes = [
           import('./features/candidate/dashboard/candidate-dashboard.component').then(
             (m) => m.CandidateDashboardComponent
           ),
-        title: 'Dashboard — Carbon Talent',
+        title: 'Dashboard — JobOrbit',
       },
       {
         path: 'jobs',
@@ -75,7 +75,7 @@ export const routes: Routes = [
           import('./features/candidate/job-search/job-search.component').then(
             (m) => m.JobSearchComponent
           ),
-        title: 'Browse Jobs — Carbon Talent',
+        title: 'Browse Jobs — JobOrbit',
       },
       {
         path: 'jobs/:id',
@@ -83,7 +83,7 @@ export const routes: Routes = [
           import('./features/candidate/job-detail/job-detail.component').then(
             (m) => m.JobDetailComponent
           ),
-        title: 'Job Details — Carbon Talent',
+        title: 'Job Details — JobOrbit',
       },
       {
         path: 'companies/:id',
@@ -91,7 +91,7 @@ export const routes: Routes = [
           import('./features/candidate/company-detail/company-detail.component').then(
             (m) => m.CompanyDetailComponent
           ),
-        title: 'Company Profile — Carbon Talent',
+        title: 'Company Profile — JobOrbit',
       },
       {
         path: 'applications',
@@ -99,7 +99,7 @@ export const routes: Routes = [
           import('./features/candidate/applications/my-applications.component').then(
             (m) => m.MyApplicationsComponent
           ),
-        title: 'My Applications — Carbon Talent',
+        title: 'My Applications — JobOrbit',
       },
       {
         path: 'saved-jobs',
@@ -107,7 +107,7 @@ export const routes: Routes = [
           import('./features/candidate/saved-jobs/saved-jobs.component').then(
             (m) => m.SavedJobsComponent
           ),
-        title: 'Saved Jobs — Carbon Talent',
+        title: 'Saved Jobs — JobOrbit',
       },
       {
         path: 'recommendations',
@@ -115,7 +115,7 @@ export const routes: Routes = [
           import('./features/candidate/ai-recommendations/ai-recommendations.component').then(
             (m) => m.AiRecommendationsComponent
           ),
-        title: 'AI Recommendations — Carbon Talent',
+        title: 'AI Recommendations — JobOrbit',
       },
       {
         path: 'profile',
@@ -123,7 +123,7 @@ export const routes: Routes = [
           import('./features/candidate/profile/candidate-profile.component').then(
             (m) => m.CandidateProfileComponent
           ),
-        title: 'My Profile — Carbon Talent',
+        title: 'My Profile — JobOrbit',
       },
       {
         path: 'notifications',
@@ -131,13 +131,13 @@ export const routes: Routes = [
           import('./features/notifications/notifications.component').then(
             (m) => m.NotificationsComponent
           ),
-        title: 'Notifications — Carbon Talent',
+        title: 'Notifications — JobOrbit',
       },
       {
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
-        title: 'Settings — Carbon Talent',
+        title: 'Settings — JobOrbit',
       },
     ],
   },
@@ -159,7 +159,7 @@ export const routes: Routes = [
           import('./features/recruiter/dashboard/recruiter-dashboard.component').then(
             (m) => m.RecruiterDashboardComponent
           ),
-        title: 'Recruiter Dashboard — Carbon Talent',
+        title: 'Recruiter Dashboard — JobOrbit',
       },
       {
         path: 'jobs',
@@ -167,7 +167,7 @@ export const routes: Routes = [
           import('./features/recruiter/manage-jobs/manage-jobs.component').then(
             (m) => m.ManageJobsComponent
           ),
-        title: 'Manage Jobs — Carbon Talent',
+        title: 'Manage Jobs — JobOrbit',
       },
       {
         path: 'jobs/new',
@@ -175,7 +175,7 @@ export const routes: Routes = [
           import('./features/recruiter/post-job/post-job.component').then(
             (m) => m.PostJobComponent
           ),
-        title: 'Post a Job — Carbon Talent',
+        title: 'Post a Job — JobOrbit',
       },
       {
         path: 'jobs/:id/edit',
@@ -183,7 +183,7 @@ export const routes: Routes = [
           import('./features/recruiter/post-job/post-job.component').then(
             (m) => m.PostJobComponent
           ),
-        title: 'Edit Job — Carbon Talent',
+        title: 'Edit Job — JobOrbit',
       },
       {
         path: 'jobs/:jobId/applicants',
@@ -191,7 +191,7 @@ export const routes: Routes = [
           import('./features/recruiter/applicants/applicants.component').then(
             (m) => m.ApplicantsComponent
           ),
-        title: 'Applicants — Carbon Talent',
+        title: 'Applicants — JobOrbit',
       },
       {
         path: 'profile',
@@ -199,7 +199,7 @@ export const routes: Routes = [
           import('./features/recruiter/company-profile/company-profile.component').then(
             (m) => m.CompanyProfileComponent
           ),
-        title: 'Company Profile — Carbon Talent',
+        title: 'Company Profile — JobOrbit',
       },
       {
         path: 'notifications',
@@ -207,13 +207,13 @@ export const routes: Routes = [
           import('./features/notifications/notifications.component').then(
             (m) => m.NotificationsComponent
           ),
-        title: 'Notifications — Carbon Talent',
+        title: 'Notifications — JobOrbit',
       },
       {
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
-        title: 'Settings — Carbon Talent',
+        title: 'Settings — JobOrbit',
       },
     ],
   },
@@ -235,7 +235,7 @@ export const routes: Routes = [
           import('./features/admin/dashboard/admin-dashboard.component').then(
             (m) => m.AdminDashboardComponent
           ),
-        title: 'Admin Overview — Carbon Talent',
+        title: 'Admin Overview — JobOrbit',
       },
       {
         path: 'users',
@@ -243,7 +243,7 @@ export const routes: Routes = [
           import('./features/admin/users/admin-users.component').then(
             (m) => m.AdminUsersComponent
           ),
-        title: 'User Directory — Carbon Talent',
+        title: 'User Directory — JobOrbit',
       },
       {
         path: 'jobs',
@@ -251,7 +251,7 @@ export const routes: Routes = [
           import('./features/admin/jobs/admin-jobs.component').then(
             (m) => m.AdminJobsComponent
           ),
-        title: 'Job Moderation — Carbon Talent',
+        title: 'Job Moderation — JobOrbit',
       },
       {
         path: 'settings',
@@ -259,7 +259,7 @@ export const routes: Routes = [
           import('./features/settings/settings.component').then(
             (m) => m.SettingsComponent
           ),
-        title: 'Security Settings — Carbon Talent',
+        title: 'Security Settings — JobOrbit',
       },
     ],
   },
@@ -271,12 +271,12 @@ export const routes: Routes = [
       import('./features/not-authorized/not-authorized.component').then(
         (m) => m.NotAuthorizedComponent
       ),
-    title: '403 — Carbon Talent',
+    title: '403 — JobOrbit',
   },
   {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then((m) => m.NotFoundComponent),
-    title: '404 — Carbon Talent',
+    title: '404 — JobOrbit',
   },
 ];

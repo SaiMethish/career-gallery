@@ -9,7 +9,7 @@ import { PasswordModule } from 'primeng/password';
 import * as AuthActions from '../../../core/auth/auth.actions';
 import { selectIsLoading, selectAuthError } from '../../../core/auth/auth.selectors';
 
-/** Login page — matches Stitch "Login - Carbon Talent" screen */
+/** Login page — matches Stitch "Login - JobOrbit" screen */
 @Component({
   selector: 'app-login',
   standalone: true,
