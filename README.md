@@ -22,28 +22,33 @@
 ## ✨ Features
 
 ### For Candidates
-- 🔍 **Job Search** — Filter by title, location, skills, job type, experience range
-- 🤖 **AI Recommendations** — Jobs ranked 10–100% by resume match using NLP cosine similarity, sorted highest → lowest
-- 📄 **Resume Upload** — PDF upload → parsed to extract skills, experience, education
-- 📌 **Application Tracker** — Track status of all submitted applications in one place
-- 💾 **Saved Jobs** — Bookmark jobs for later review
+- 🔍 **Job Search** — Browse and filter jobs from **both sources** (recruiter-posted + ATS-synced) by title, location, skills, type, experience
+- 🤖 **AI Recommendations** — All jobs ranked 10–100% by resume match using NLP cosine similarity, sorted highest → lowest
+- 📄 **Resume Upload** — PDF upload → parsed to extract skills, experience, education for AI matching
+- ✅ **Smart Apply** — One-click apply for direct recruiter jobs; redirect to company site for ATS jobs
+- 📌 **Application Tracker** — Track all submitted application statuses in one place
+- 💾 **Saved Jobs** — Bookmark any job from either source for later review
 - 🏢 **Company Profiles** — View recruiter company pages
 
 ### For Recruiters
-- 📝 **Post Jobs** — Create and manage job listings with skill tags, experience range, salary
-- 👥 **Applicant Review** — View, filter, and update applicants by status (shortlisted, rejected, offered)
-- 🗂️ **Dashboard** — Overview of active jobs and total applicant counts
+- 🏢 **Company Profile** — Create a branded company page with description and website
+- 📝 **Post Jobs** — Create listings with title, description, required skills, salary, experience, job type, and location
+- ✏️ **Manage Listings** — Edit, close, or delete any of your posted jobs
+- 👥 **Applicant Review** — View applicants per job, read their profiles, update statuses (Shortlisted / Rejected / Offered)
+- 🗂️ **Recruiter Dashboard** — Overview of active listings and total applicant counts
 
 ### For Admins
-- 👤 **User Management** — View and moderate candidate/recruiter accounts
-- 🔄 **ATS Sync Controls** — Trigger Greenhouse sync on demand
-- 📊 **Job Moderation** — Review and manage all platform listings
+- 👤 **User Management** — View and moderate all candidate and recruiter accounts
+- 📋 **Job Moderation** — Review and manage listings across both sources
+- 🔄 **ATS Sync Controls** — Trigger Greenhouse sync on demand, view sync summaries
+- 📊 **Platform Dashboards** — Stats across users, jobs, and applications
 
-### Platform-Wide
-- 🏗️ **Greenhouse ATS Integration** — Live job sync from 35+ Indian tech companies
-- ⏱️ **Daily Auto-Refresh** — Cron job syncs fresh listings and removes expired ones every 24h
+### Platform-Wide (Dual Job Source Model)
+- 🏗️ **Source 1 — Direct Recruiter Postings** — Recruiters register and post jobs directly on JobOrbit with full metadata
+- 🌐 **Source 2 — Greenhouse ATS Integration** — Auto-synced live listings from 35+ Indian tech companies, refreshed daily
+- ⏱️ **Daily Auto-Refresh** — Cron job ingests new ATS listings and removes expired ones every 24h
 - 🔐 **JWT Auth** — Silent refresh, role-based guards, session expiry, secure cross-origin cookies
-- 📱 **Responsive Design** — Works across desktop and mobile
+- 📱 **Responsive Design** — Works across desktop, tablet, and mobile
 
 ---
 
