@@ -3,11 +3,10 @@
 # 🚀 JobOrbit
 ### AI-Powered Job Portal — Full-Stack Production App
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-joborbit.vercel.app-6929c4?style=for-the-badge&logo=vercel)](https://career-gallery.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-job--orbit--eleven.vercel.app-6929c4?style=for-the-badge&logo=vercel)](https://job-orbit-eleven.vercel.app)
 [![Backend](https://img.shields.io/badge/Backend-Render-0f62fe?style=for-the-badge&logo=render)](https://jobportal-26gu.onrender.com)
 [![Angular](https://img.shields.io/badge/Angular-17-DD0031?style=for-the-badge&logo=angular)](https://angular.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 **JobOrbit** is a production-grade AI-powered job portal that aggregates real job listings from companies using the [Greenhouse ATS](https://www.greenhouse.io/) and combines them with recruiter-posted jobs — all ranked by AI compatibility against your uploaded resume.
 
@@ -151,10 +150,14 @@ The app runs at `http://localhost:4200`.
 
 | Service | URL |
 |---------|-----|
-| Frontend (Vercel) | https://career-gallery.vercel.app |
+| Frontend (Vercel) | https://job-orbit-eleven.vercel.app |
 | Backend API (Render) | https://jobportal-26gu.onrender.com |
 | API Health Check | https://jobportal-26gu.onrender.com/actuator/health |
 
 > ⚠️ **Note:** The backend is on a Render free tier. It may take ~60 seconds to wake up after a period of inactivity. The frontend handles this gracefully with loading states.
 
 ---
+
+<div align="center">
+  Built with ❤️ by <a href="https://github.com/SaiMethish">SaiMethish</a>
+</div>
