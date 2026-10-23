@@ -13,7 +13,7 @@
 
 *Your skills in orbit. Your career in motion.*
 
-[🔗 Live App](https://career-gallery.vercel.app) &nbsp;·&nbsp; [📦 Backend Repo](https://github.com/SaiMethish/jobPortal)
+[🔗 Live App](https://job-orbit-eleven.vercel.app) &nbsp;·&nbsp; [📦 Backend Repo](https://github.com/SaiMethish/jobPortal)
 
 </div>
 
@@ -144,21 +144,6 @@ npm start
 
 The app runs at `http://localhost:4200`.
 
-### Environment Configuration
-
-```typescript
-// src/environments/environment.ts  (development)
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080',
-};
-
-// src/environments/environment.prod.ts  (production)
-export const environment = {
-  production: true,
-  apiUrl: 'https://jobportal-26gu.onrender.com',
-};
-```
 
 ---
 
@@ -173,13 +158,3 @@ export const environment = {
 > ⚠️ **Note:** The backend is on a Render free tier. It may take ~60 seconds to wake up after a period of inactivity. The frontend handles this gracefully with loading states.
 
 ---
-
-## 📄 License
-
-MIT License © 2026 [SaiMethish](https://github.com/SaiMethish)
-
----
-
-<div align="center">
-  Built with ❤️ by <a href="https://github.com/SaiMethish">SaiMethish</a>
-</div>
